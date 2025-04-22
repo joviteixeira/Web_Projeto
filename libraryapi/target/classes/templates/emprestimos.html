@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empréstimos</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { display: flex; min-height: 100vh; background-color: #f3f4f6; }
+    aside {
+      width: 280px;
+      background: linear-gradient(180deg, #111827, #1f2937);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+    }
+    .sidebar-header {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 1.7rem;
+      font-weight: bold;
+      background-color: #0f172a;
+      border-bottom: 1px solid #374151;
+      letter-spacing: 1px;
+    }
+    .nav-links { list-style: none; padding: 1rem; }
+    .nav-links li { margin-bottom: 1rem; }
+    .nav-links li a {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background-color: #1f2937;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    .nav-links li a:hover {
+      background-color: #4b5563;
+      transform: translateX(5px);
+    }
+    .sidebar-footer {
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      border-top: 1px solid #374151;
+      background-color: #0f172a;
+    }
+    .sidebar-footer p { margin-bottom: 0.3rem; color: #d1d5db; }
+    .sidebar-footer strong { color: #fbbf24; }
+    .sidebar-footer .config-links {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sidebar-footer .config-links a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .sidebar-footer .config-links a:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+    main {
+      flex-grow: 1;
+      padding: 3rem;
+      background-color: #f9fafb;
+      overflow-y: auto;
+    }
+    section {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2, h3 { color: #1f2937; margin-bottom: 1.2rem; }
+    label {
+      font-weight: 600;
+      margin-top: 1rem;
+      display: block;
+      color: #374151;
+    }
+    input, select, button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #3b82f6;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover { background-color: #2563eb; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    table th, table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    table th { background-color: #f1f5f9; color: #374151; }
+    table tbody tr:nth-child(even) { background-color: #f9fafb; }
+  </style>
+</head>
+<body>
+<aside>
+  <div>  <div class="sidebar-header">
+    <a href="/layout" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+  </div>
+    <ul class="nav-links">
+      <li><a href="/livros">📘 Livros</a></li>
+      <li><a href="/autores">🖊️ Autores</a></li>
+      <li><a href="/emprestimos">🔁 Empréstimos</a></li>
+      <li><a href="/editoras">🏢 Editoras</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-footer">
+    <p>Você está logado como:</p>
+    <strong th:text="${usuario.nome}">Nome do Usuário</strong>
+    <div class="config-links">
+      <a href="/configuracoes">Editar Perfil</a>
+      <a href="/logout">Sair</a>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <section>
+    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+      <button onclick="mostrarSecao('emprestimo')">📗 Registrar Empréstimo</button>
+      <button onclick="mostrarSecao('livrosEmprestados')">📕 Livros Emprestados</button>
+      <button onclick="mostrarSecao('livrosDisponiveis')">📘 Livros Disponíveis</button>
+    </div>
+  </section>
+
+  <!-- Empréstimo -->
+  <section id="secao-emprestimo">
+    <h2>Registrar Empréstimo</h2>
+
+    <div th:if="${erro}" style="color: red;">
+      <p th:text="${erro}"></p>
+    </div>
+
+    <form th:action="@{/emprestimos/registrar}" method="post" th:object="${emprestimoDTO}">
+      <input type="hidden" th:field="*{usuarioId}"  />
+
+      <label for="livro">Livro:</label>
+      <select id="livro" th:field="*{livroId}" required>
+        <option value="" disabled selected>Selecione o Livro</option>
+        <option th:each="livro : ${livrosDisponiveis}" th:value="${livro.id}" th:text="${livro.titulo}"></option>
+      </select>
+
+      <label for="dataEmprestimo">Data do Empréstimo:</label>
+      <input type="date" id="dataEmprestimo" th:field="*{dataEmprestimo}" required />
+
+      <label for="dataDevolucaoPrevista">Data de Devolução Prevista:</label>
+      <input type="date" id="dataDevolucaoPrevista" th:field="*{dataDevolucaoPrevista}" required />
+
+      <button type="submit">Registrar Empréstimo</button>
+    </form>
+  </section>
+
+  <!-- Livros Emprestados -->
+  <section id="secao-livrosEmprestados" style="display: none;">
+    <h2>Livros Emprestados</h2>
+    <table th:if="${not #lists.isEmpty(livrosEmprestados)}">
+      <thead>
+      <tr>
+        <th>Título</th>
+        <th>Usuário</th>
+        <th>Data Empréstimo</th>
+        <th>Data Devolução Prevista</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="emp : ${livrosEmprestados}">
+        <td th:text="${emp.livro.titulo}"></td>
+        <td th:text="${emp.usuario.nome}"></td>
+        <td>
+          <span th:if="${emp.dataEmprestimo != null}" th:text="${#temporals.format(emp.dataEmprestimo, 'dd/MM/yyyy')}"></span>
+          <span th:unless="${emp.dataEmprestimo != null}">-</span>
+        </td>
+        <td>
+          <span th:if="${emp.dataDevolucaoPrevista != null}" th:text="${#temporals.format(emp.dataDevolucaoPrevista, 'dd/MM/yyyy')}"></span>
+          <span th:unless="${emp.dataDevolucaoPrevista != null}">-</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(livrosEmprestados)}">Nenhum livro emprestado.</p>
+  </section>
+
+  <!-- Livros Disponíveis -->
+  <section id="secao-livrosDisponiveis" style="display: none;">
+    <h2>Livros Disponíveis</h2>
+    <table th:if="${not #lists.isEmpty(livrosDisponiveis)}">
+      <thead>
+      <tr>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Editora</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="livro : ${livrosDisponiveis}">
+        <td th:text="${livro.titulo}"></td>
+        <td th:text="${livro.autor?.nome}"></td>
+        <td th:text="${livro.editora?.nome}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(livrosDisponiveis)}">Nenhum livro disponível.</p>
+  </section>
+</main>
+<script>
+  function mostrarSecao(secao) {
+    document.getElementById('secao-emprestimo').style.display = 'none';
+    document.getElementById('secao-livrosEmprestados').style.display = 'none';
+    document.getElementById('secao-livrosDisponiveis').style.display = 'none';
+    document.getElementById('secao-' + secao).style.display = 'block';
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    mostrarSecao('emprestimo');
+    const form = document.querySelector("form");
+    const dataEmprestimo = document.querySelector('input[name="dataEmprestimo"]');
+    const dataDevolucao = document.querySelector('input[name="dataDevolucaoPrevista"]');
+    form.addEventListener("submit", (e) => {
+      const inicio = new Date(dataEmprestimo.value);
+      const fim = new Date(dataDevolucao.value);
+      if (inicio > fim) {
+        e.preventDefault();
+        alert("A data de empréstimo não pode ser posterior à data de devolução prevista.");
+      }
+    });
+  });
+</script>
+</body>
+</html>

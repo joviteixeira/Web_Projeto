@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autores</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <style>
+        body {
+          display: flex;
+          height: 100vh;
+          background-color: #f3f4f6;
+          font-family: 'Segoe UI', sans-serif;
+        }
+
+        aside {
+          width: 280px;
+          background: linear-gradient(180deg, #111827, #1f2937);
+          color: white;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar-header {
+          text-align: center;
+          padding: 2rem 1rem;
+          font-size: 1.7rem;
+          font-weight: bold;
+          background-color: #0f172a;
+          border-bottom: 1px solid #374151;
+          letter-spacing: 1px;
+        }
+
+        .nav-links {
+          list-style: none;
+          padding: 1rem;
+        }
+
+        .nav-links li {
+          margin-bottom: 1rem;
+        }
+
+        .nav-links li a {
+          display: flex;
+          align-items: center;
+          padding: 0.8rem 1rem;
+          background-color: #1f2937;
+          border-radius: 8px;
+          color: white;
+          text-decoration: none;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+        }
+
+        .nav-links li a:hover {
+          background-color: #4b5563;
+          transform: translateX(5px);
+        }
+
+        .sidebar-footer {
+          padding: 1.5rem;
+          font-size: 0.9rem;
+          border-top: 1px solid #374151;
+          background-color: #0f172a;
+        }
+
+        .sidebar-footer p {
+          margin-bottom: 0.3rem;
+          color: #d1d5db;
+        }
+
+        .sidebar-footer strong {
+          color: #fbbf24;
+        }
+
+        .sidebar-footer .config-links {
+          margin-top: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .sidebar-footer .config-links a {
+          color: #60a5fa;
+          text-decoration: none;
+          font-weight: bold;
+        }
+
+        .sidebar-footer .config-links a:hover {
+          color: #93c5fd;
+          text-decoration: underline;
+        }
+
+        main {
+          flex-grow: 1;
+          padding: 3rem;
+          background-color: #f9fafb;
+          overflow-y: auto;
+        }
+
+        section {
+          background-color: white;
+          padding: 2rem;
+          border-radius: 12px;
+          margin-bottom: 2rem;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+          margin-bottom: 1.5rem;
+          color: #1f2937;
+        }
+
+        input, button {
+          display: block;
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 1rem;
+          border: 1px solid #d1d5db;
+          border-radius: 6px;
+          font-size: 1rem;
+        }
+
+        button {
+          background-color: #3b82f6;
+          color: white;
+          cursor: pointer;
+          border: none;
+          font-weight: bold;
+        }
+
+        button:hover {
+          background-color: #2563eb;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 1rem;
+        }
+
+        table th, table td {
+          padding: 12px;
+          border-bottom: 1px solid #e5e7eb;
+          text-align: left;
+        }
+
+        table th {
+          background-color: #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+<aside>
+    <div>
+        <div class="sidebar-header">
+            <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/livros">📘 Livros</a></li>
+            <li><a href="/autores">🖊️ Autores</a></li>
+            <li><a href="/emprestimos">🔁 Empréstimos</a></li>
+            <li><a href="/editoras">🏢 Editoras</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-footer">
+        <p>Modo de acesso:</p>
+        <strong th:text="${usuario?.nome ?: 'Visitante'}">Visitante</strong>
+        <div class="config-links">
+            <a href="/login" th:if="${usuario == null}">Entrar</a>
+        </div>
+    </div>
+</aside>
+
+<main>
+    <!-- Mensagens globais -->
+    <div th:if="${mensagem}" class="alert alert-success">
+        <span th:text="${mensagem}"></span>
+    </div>
+    <div th:if="${mensagemErro}" class="alert alert-danger">
+        <span th:text="${mensagemErro}"></span>
+    </div>
+
+    <div class="nav-buttons">
+        <button onclick="mostrarSecao('cadastro')" class="active">Cadastrar Autor</button>
+        <button onclick="mostrarSecao('pesquisa')">Pesquisar Autores</button>
+    </div>
+
+    <!-- Seção de Cadastro -->
+    <section id="secao-cadastro">
+        <h2>Cadastrar Novo Autor</h2>
+        <form th:action="@{/autores/cadastrar}" method="post" th:object="${autorDTO}">
+            <div class="form-group">
+                <label>Nome:</label>
+                <input type="text" th:field="*{nome}" placeholder="Nome completo" required>
+                <div th:if="${#fields.hasErrors('nome')}" class="error-message">
+                    <span th:errors="*{nome}"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Data de Nascimento:</label>
+                <input type="date" th:field="*{dataNascimento}" required>
+                <div th:if="${#fields.hasErrors('dataNascimento')}" class="error-message">
+                    <span th:errors="*{dataNascimento}"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nacionalidade:</label>
+                <input type="text" th:field="*{nacionalidade}" placeholder="País de origem" required>
+                <div th:if="${#fields.hasErrors('nacionalidade')}" class="error-message">
+                    <span th:errors="*{nacionalidade}"></span>
+                </div>
+            </div>
+
+            <button type="submit">Salvar Autor</button>
+        </form>
+    </section>
+
+    <!-- Seção de Pesquisa -->
+    <section id="secao-pesquisa" style="display: none;">
+        <h2>Pesquisar Autores</h2>
+        <form th:action="@{/autores}" method="get">
+            <div class="search-fields">
+                <input type="text" name="nome" placeholder="Filtrar por nome"
+                       th:value="${param.nome}">
+                <input type="text" name="nacionalidade" placeholder="Filtrar por nacionalidade"
+                       th:value="${param.nacionalidade}">
+                <button type="submit">Aplicar Filtros</button>
+            </div>
+        </form>
+
+        <div th:if="${not #lists.isEmpty(autores)}" class="results-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Nacionalidade</th>
+                    <th>Data de Nascimento</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="autor : ${autores}">
+                    <td th:text="${autor.nome}"></td>
+                    <td th:text="${autor.nacionalidade}"></td>
+                    <td th:text="${#temporals.format(autor.dataNascimento, 'dd/MM/yyyy')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(autores)}" class="no-results">
+            <p>Nenhum autor encontrado com os critérios informados.</p>
+        </div>
+    </section>
+</main>
+
+<script>
+    // Controle de exibição das seções
+    function mostrarSecao(secao) {
+        const sections = {
+            'cadastro': document.getElementById('secao-cadastro'),
+            'pesquisa': document.getElementById('secao-pesquisa')
+        };
+
+        // Alternar visibilidade
+        Object.entries(sections).forEach(([key, element]) => {
+            element.style.display = key === secao ? 'block' : 'none';
+        });
+
+        // Atualizar estado dos botões
+        document.querySelectorAll('.nav-buttons button').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(secao));
+        });
+    }
+
+    // Mostrar seção correta ao carregar com parâmetros
+    window.addEventListener('load', () => {
+        const params = new URLSearchParams(window.location.search);
+        if(params.toString()) {
+            mostrarSecao('pesquisa');
+        }
+    });
+</script>
+</body>
+</html>

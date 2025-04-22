@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livros</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      background-color: #f3f4f6;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Sidebar já existente */
+    aside {
+      width: 280px;
+      background: linear-gradient(180deg, #111827, #1f2937);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar-header {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 1.7rem;
+      font-weight: bold;
+      background-color: #0f172a;
+      border-bottom: 1px solid #374151;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 1rem;
+    }
+
+    .nav-links li {
+      margin-bottom: 1rem;
+    }
+
+    .nav-links li a {
+      display: flex;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background-color: #1f2937;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links li a:hover {
+      background-color: #4b5563;
+      transform: translateX(5px);
+    }
+
+    .sidebar-footer {
+      padding: 1.5rem;
+      font-size: 0.9rem;
+      border-top: 1px solid #374151;
+      background-color: #0f172a;
+    }
+
+    .sidebar-footer p {
+      margin-bottom: 0.3rem;
+      color: #d1d5db;
+    }
+
+    .sidebar-footer strong {
+      color: #fbbf24;
+    }
+
+    .sidebar-footer .config-links {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sidebar-footer .config-links a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .sidebar-footer .config-links a:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 3rem;
+      background-color: #f9fafb;
+      overflow-y: auto;
+    }
+
+    section {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #1f2937;
+    }
+
+    input, select, button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #3b82f6;
+      color: white;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    table th, table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    table th {
+      background-color: #f1f5f9;
+    }
+  </style>
+</head>
+<body>
+<aside>
+  <div>
+    <div class="sidebar-header">
+      <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/livros">📘 Livros</a></li>
+      <li><a href="/autores">🖊️ Autores</a></li>
+      <li><a href="/emprestimos">🔁 Empréstimos</a></li>
+      <li><a href="/editoras">🏢 Editoras</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-footer">
+    <p>Sistema de Gestão</p>
+    <div class="config-links">
+      <a href="/login">Acessar Conta</a>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <!-- Mensagens de feedback -->
+  <div th:if="${mensagem}" class="alert alert-success">
+    <span th:text="${mensagem}"></span>
+  </div>
+  <div th:if="${mensagemErro}" class="alert alert-danger">
+    <span th:text="${mensagemErro}"></span>
+  </div>
+
+  <div class="nav-buttons">
+    <button onclick="mostrarSecao('cadastro')" class="active">📖 Cadastrar Livro</button>
+    <button onclick="mostrarSecao('pesquisa')">🔍 Pesquisar Livros</button>
+  </div>
+
+  <!-- Seção de Cadastro -->
+  <section id="secao-cadastro">
+    <h2>Cadastro de Novo Livro</h2>
+    <form th:action="@{/livros/cadastrar}" method="post" th:object="${livroDTO}">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>ISBN:</label>
+          <input type="text" th:field="*{isbn}"
+                 placeholder="Ex: 978-85-123-4567-0"
+                 required>
+          <div th:if="${#fields.hasErrors('isbn')}" class="error-message">
+            <span th:errors="*{isbn}"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Título:</label>
+          <input type="text" th:field="*{titulo}"
+                 placeholder="Título completo"
+                 required>
+          <div th:if="${#fields.hasErrors('titulo')}" class="error-message">
+            <span th:errors="*{titulo}"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Data de Publicação:</label>
+          <input type="date" th:field="*{dataPublicacao}"
+                 required>
+          <div th:if="${#fields.hasErrors('dataPublicacao')}" class="error-message">
+            <span th:errors="*{dataPublicacao}"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Gênero:</label>
+          <select th:field="*{genero}" required>
+            <option value="">Selecione...</option>
+            <option th:each="genero : ${generos}"
+                    th:value="${genero}"
+                    th:text="${genero}"></option>
+          </select>
+          <div th:if="${#fields.hasErrors('genero')}" class="error-message">
+            <span th:errors="*{genero}"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Autor:</label>
+          <select th:field="*{autorId}" required>
+            <option value="">Selecione...</option>
+            <option th:each="autor : ${autores}"
+                    th:value="${autor.id}"
+                    th:text="${autor.nome}"></option>
+          </select>
+          <div th:if="${#fields.hasErrors('autorId')}" class="error-message">
+            <span th:errors="*{autorId}"></span>
+          </div>
+        </div>
+
+        <!-- Campo Editora Adicionado -->
+        <div class="form-group">
+          <label>Editora:</label>
+          <select th:field="*{editoraId}" required>
+            <option value="">Selecione...</option>
+            <option th:each="editora : ${editoras}"
+                    th:value="${editora.id}"
+                    th:text="${editora.nome}"></option>
+          </select>
+          <div th:if="${#fields.hasErrors('editoraId')}" class="error-message">
+            <span th:errors="*{editoraId}"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Preço (R$):</label>
+          <input type="number" th:field="*{preco}"
+                 step="0.01"
+                 placeholder="0.00"
+                 min="0">
+          <div th:if="${#fields.hasErrors('preco')}" class="error-message">
+            <span th:errors="*{preco}"></span>
+          </div>
+        </div>
+      </div>
+      <button type="submit">Salvar Livro</button>
+    </form>
+  </section>
+
+  <!-- Seção de Pesquisa -->
+  <section id="secao-pesquisa" style="display: none;">
+    <h2>Pesquisa de Livros</h2>
+    <form th:action="@{/livros}" method="get">
+      <div class="search-filters">
+        <input type="text" name="titulo"
+               placeholder="Título"
+               th:value="${param.titulo}">
+
+        <input type="text" name="autor"
+               placeholder="Autor"
+               th:value="${param.autor}">
+
+        <input type="text" name="isbn"
+               placeholder="ISBN"
+               th:value="${param.isbn}">
+
+        <select name="genero">
+          <option value="">Todos os Gêneros</option>
+          <option th:each="genero : ${generos}"
+                  th:value="${genero}"
+                  th:selected="${param.genero == genero}"
+                  th:text="${genero}"></option>
+        </select>
+
+        <button type="submit">Aplicar Filtros</button>
+      </div>
+    </form>
+
+    <div class="results-table" th:if="${not #lists.isEmpty(livros)}">
+      <table>
+        <thead>
+        <tr>
+          <th>ISBN</th>
+          <th>Título</th>
+          <th>Publicação</th>
+          <th>Autor</th>
+          <th>Gênero</th>
+          <th>Preço</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="livro : ${livros}">
+          <td th:text="${livro.isbn}"></td>
+          <td th:text="${livro.titulo}"></td>
+          <td th:text="${#temporals.format(livro.dataPublicacao, 'dd/MM/yyyy')}"></td>
+          <td th:text="${livro.autor.nome}"></td>
+          <td th:text="${livro.genero}"></td>
+          <td th:text="${#numbers.formatCurrency(livro.preco)}">R$ </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(livros) and filtrosAtivos}" class="no-results">
+      <p>Nenhum livro encontrado com os critérios informados.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  function mostrarSecao(secao) {
+    const sections = {
+      'cadastro': document.getElementById('secao-cadastro'),
+      'pesquisa': document.getElementById('secao-pesquisa')
+    };
+
+    Object.values(sections).forEach(section => {
+      section.style.display = 'none';
+    });
+
+    if (sections[secao]) {
+      sections[secao].style.display = 'block';
+    }
+
+    document.querySelectorAll('.nav-buttons button').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.textContent.toLowerCase().includes(secao)) {
+        btn.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.toString()) {
+      mostrarSecao('pesquisa');
+    } else {
+      mostrarSecao('cadastro');
+    }
+  });
+
+  const hasErrors = document.querySelector('.error-message');
+  if (hasErrors) {
+    window.scrollTo({
+      top: document.getElementById('secao-cadastro').offsetTop,
+      behavior: 'smooth'
+    });
+  }
+</script>
+</body>
+</html>
