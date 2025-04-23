@@ -10,53 +10,44 @@ import com.example.libraryapi.repository.EmprestimoRepository;
 import com.example.libraryapi.repository.LivroRepository;
 import com.example.libraryapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class EmprestimoService {
 
     private final EmprestimoRepository emprestimoRepository;
-    private final LivroRepository livroRepository;
-    private final EmprestimoMapper emprestimoMapper;
-    private final UsuarioRepository usuarioRepository;
 
-    @Transactional
-    public Emprestimo registrarEmprestimo(EmprestimoDTO dto) {
-        Livro livro = livroRepository.findById(dto.getLivroId())
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
-
-        if (!livro.isDisponivel()) {
-            throw new RuntimeException("Livro já emprestado");
-        }
-
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-        Emprestimo emprestimo = emprestimoMapper.toEntity(dto);
-        emprestimo.setLivro(livro);
-        emprestimo.setUsuario(usuario); // Agora está passando o objeto correto
-
-        emprestimo = emprestimoRepository.save(emprestimo);
-        livro.setDisponivel(false);
-        livroRepository.save(livro);
-
-        return emprestimo;
+    @Autowired
+    public EmprestimoService(EmprestimoRepository emprestimoRepository) {
+        this.emprestimoRepository = emprestimoRepository;
     }
 
-
-    public List<Emprestimo> listarEmprestimosAtivos() {
-        return emprestimoRepository.findByDataDevolucaoRealIsNull();
-    }
-
-    public void registrarEmprestimo(Emprestimo emprestimo) {
+    // Salvar um novo empréstimo
+    public void save(Emprestimo emprestimo) {
         emprestimoRepository.save(emprestimo);
     }
 
-    public List<Emprestimo> buscarLivrosEmprestados() {
+    // Buscar todos os empréstimos
+    public List<Emprestimo> findAll() {
         return emprestimoRepository.findAll();
+    }
+
+    // Buscar empréstimo por ID
+    public Emprestimo findById(UUID id) {
+        return emprestimoRepository.findById(id).orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+    }
+
+    // Buscar empréstimos com status EM_ANDAMENTO
+    public List<Emprestimo> findByStatus(StatusEmprestimo status) {
+        return emprestimoRepository.findByStatus(status);
+    }
+
+    public List<Emprestimo> findByUsuarioIdAndStatus(UUID usuarioId, StatusEmprestimo status) {
+        return emprestimoRepository.findByUsuarioIdAndStatus(usuarioId, status);
     }
 }

@@ -36,12 +36,13 @@ public class Livro {
     @Column(name = "data_publicacao")
     private LocalDate dataPublicacao;
 
-    @Enumerated(EnumType.STRING)
+
     @Column(name = "genero", length = 30, nullable = false)
+    @Enumerated(EnumType.STRING)
     private GeneroEnum genero;
 
-    @Column(name = "preco", precision = 18, scale = 2)
-    private BigDecimal preco;
+    @Column(name = "preco")
+    private Double preco;
 
     @ManyToOne(
         fetch = FetchType.LAZY
@@ -64,6 +65,7 @@ public class Livro {
     @JoinColumn(name = "id_editora")
     private Editora editora;
 
-    @Column(nullable = false)
-    private boolean disponivel;
+    @Column(name = "disponivel", nullable = false, columnDefinition = "boolean default true")
+    private boolean disponivel = true;
+
 }

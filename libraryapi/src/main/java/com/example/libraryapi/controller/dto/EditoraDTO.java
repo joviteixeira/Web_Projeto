@@ -1,32 +1,63 @@
 package com.example.libraryapi.controller.dto;
 
 import com.example.libraryapi.model.Editora;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class EditoraDTO {
-        @NotBlank(message = "Nome é obrigatório")
+
+        private UUID id;
         private String nome;
-
-        @NotBlank(message = "País é obrigatório")
         private String pais;
+        private List<LivroDTO> livros; // Caso você tenha essa relação com livros
 
-        private List<LivroDTO> livros;
+        public EditoraDTO(){}
 
-        // Required no-arg constructor
-        public EditoraDTO() {}
+        // Construtor que recebe uma Editora e converte
+        public EditoraDTO(Editora editora) {
+                this.id = editora.getId();
+                this.nome = editora.getNome();
+                this.pais = editora.getPais();
+                // Se você estiver mapeando livros, pode adicionar aqui
+                // this.livros = editora.getLivros().stream().map(livro -> new LivroDTO(livro)).collect(Collectors.toList());
+        }
 
-        // Getters and Setters
-        public String getNome() { return nome; }
-        public void setNome(String nome) { this.nome = nome; }
+        // Método estático para converter lista de Editoras para lista de EditoraDTO
+        public static List<EditoraDTO> toDTOList(List<Editora> editoras) {
+                return editoras.stream().map(EditoraDTO::new).collect(Collectors.toList());
+        }
 
-        public String getPais() { return pais; }
-        public void setPais(String pais) { this.pais = pais; }
+        // Getters e Setters
+        public UUID getId() {
+                return id;
+        }
 
-        public List<LivroDTO> getLivros() { return livros; }
-        public void setLivros(List<LivroDTO> livros) { this.livros = livros; }
+        public void setId(UUID id) {
+                this.id = id;
+        }
 
-        public Editora toEntity() {
-                return new Editora(this.nome, this.pais);
+        public String getNome() {
+                return nome;
+        }
+
+        public void setNome(String nome) {
+                this.nome = nome;
+        }
+
+        public String getPais() {
+                return pais;
+        }
+
+        public void setPais(String pais) {
+                this.pais = pais;
+        }
+
+        public List<LivroDTO> getLivros() {
+                return livros;
+        }
+
+        public void setLivros(List<LivroDTO> livros) {
+                this.livros = livros;
         }
 }

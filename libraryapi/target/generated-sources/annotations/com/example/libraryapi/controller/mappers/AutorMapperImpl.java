@@ -2,14 +2,12 @@ package com.example.libraryapi.controller.mappers;
 
 import com.example.libraryapi.controller.dto.AutorDTO;
 import com.example.libraryapi.model.Autor;
-import java.time.LocalDate;
-import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-22T10:24:29-0300",
+    date = "2025-04-23T11:53:04-0300",
     comments = "version: 1.6.0, compiler: javac, environment: Java 21.0.6 (Amazon.com Inc.)"
 )
 @Component
@@ -23,31 +21,26 @@ public class AutorMapperImpl implements AutorMapper {
 
         Autor autor = new Autor();
 
-        autor.setId( dto.id() );
-        autor.setNome( dto.nome() );
-        autor.setDataNascimento( dto.dataNascimento() );
-        autor.setNacionalidade( dto.nacionalidade() );
+        autor.setId( dto.getId() );
+        autor.setNome( dto.getNome() );
+        autor.setDataNascimento( dto.getDataNascimento() );
+        autor.setNacionalidade( dto.getNacionalidade() );
 
         return autor;
     }
 
     @Override
-    public AutorDTO toDTO(Autor autor) {
-        if ( autor == null ) {
+    public AutorDTO toDTO(Autor entity) {
+        if ( entity == null ) {
             return null;
         }
 
-        UUID id = null;
-        String nome = null;
-        LocalDate dataNascimento = null;
-        String nacionalidade = null;
+        AutorDTO autorDTO = new AutorDTO();
 
-        id = autor.getId();
-        nome = autor.getNome();
-        dataNascimento = autor.getDataNascimento();
-        nacionalidade = autor.getNacionalidade();
-
-        AutorDTO autorDTO = new AutorDTO( id, nome, dataNascimento, nacionalidade );
+        autorDTO.setId( entity.getId() );
+        autorDTO.setNome( entity.getNome() );
+        autorDTO.setDataNascimento( entity.getDataNascimento() );
+        autorDTO.setNacionalidade( entity.getNacionalidade() );
 
         return autorDTO;
     }

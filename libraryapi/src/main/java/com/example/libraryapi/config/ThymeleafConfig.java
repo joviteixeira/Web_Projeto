@@ -20,7 +20,7 @@ public class ThymeleafConfig implements WebMvcConfigurer {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine);
         resolver.setCharacterEncoding("UTF-8");
-        resolver.setOrder(1);           // prioridade alta
+        resolver.setOrder(1);
         registry.viewResolver(resolver);
     }
 }

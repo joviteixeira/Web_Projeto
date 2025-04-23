@@ -61,6 +61,39 @@
         .form-control:focus {
             box-shadow: 0 0 0 0.2rem rgba(28, 146, 210, 0.25);
         }
+        
+        /* Novas regras de responsividade */
+        @media (max-width: 576px) {
+            body {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1.5rem;
+                border-radius: 1rem;
+            }
+            .text-center h3 {
+                font-size: 1.5rem;
+                margin-bottom: 0.8rem;
+            }
+            .form-control, .btn-primary {
+                padding: 0.5rem 1rem;
+            }
+            .input-group-text {
+                padding: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .card {
+                padding: 1.2rem;
+            }
+            .text-center h3 {
+                font-size: 1.3rem;
+            }
+            .register-link p {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>

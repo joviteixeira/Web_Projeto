@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-22T10:24:29-0300",
+    date = "2025-04-23T11:53:04-0300",
     comments = "version: 1.6.0, compiler: javac, environment: Java 21.0.6 (Amazon.com Inc.)"
 )
 @Component
@@ -22,13 +22,12 @@ public class LivroMapperImpl extends LivroMapper {
 
         Livro.LivroBuilder livro = Livro.builder();
 
-        livro.autor( mapAutor( livroDTO.autorId() ) );
-        livro.editora( mapEditora( livroDTO.editoraId() ) );
-        livro.isbn( livroDTO.isbn() );
-        livro.titulo( livroDTO.titulo() );
-        livro.dataPublicacao( livroDTO.dataPublicacao() );
-        livro.genero( livroDTO.genero() );
-        livro.preco( livroDTO.preco() );
+        livro.autor( mapAutor( livroDTO.getAutorId() ) );
+        livro.editora( mapEditora( livroDTO.getEditoraId() ) );
+        livro.isbn( livroDTO.getIsbn() );
+        livro.titulo( livroDTO.getTitulo() );
+        livro.dataPublicacao( livroDTO.getDataPublicacao() );
+        livro.genero( livroDTO.getGenero() );
 
         return livro.build();
     }
@@ -45,8 +44,6 @@ public class LivroMapperImpl extends LivroMapper {
         resultadoPesquisaLivroDTO.setTitulo( livro.getTitulo() );
         resultadoPesquisaLivroDTO.setIsbn( livro.getIsbn() );
         resultadoPesquisaLivroDTO.setDataPublicacao( livro.getDataPublicacao() );
-        resultadoPesquisaLivroDTO.setGenero( livro.getGenero() );
-        resultadoPesquisaLivroDTO.setPreco( livro.getPreco() );
 
         return resultadoPesquisaLivroDTO;
     }

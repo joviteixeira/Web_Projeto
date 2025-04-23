@@ -5,134 +5,252 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editoras</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { display: flex; min-height: 100vh; background-color: #f3f4f6; }
+    :root {
+        --sidebar-width: 280px;
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --text-color: #1f2937;
+        --light-bg: #f9fafb;
+        --white: #ffffff;
+        --border-color: #d1d5db;
+        --table-header-bg: #f1f5f9;
+        --table-even-row: #f9fafb;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--light-bg);
+    }
+
+    /* ========== SIDEBAR ========== */
     aside {
-      width: 280px;
-      background: linear-gradient(180deg, #111827, #1f2937);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, #111827, #1f2937);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        height: 100vh;
     }
+
     .sidebar-header {
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 1.7rem;
-      font-weight: bold;
-      background-color: #0f172a;
-      border-bottom: 1px solid #374151;
-      letter-spacing: 1px;
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 1.7rem;
+        font-weight: bold;
+        background-color: #0f172a;
+        border-bottom: 1px solid #374151;
+        letter-spacing: 1px;
     }
-    .nav-links { list-style: none; padding: 1rem; }
-    .nav-links li { margin-bottom: 1rem; }
+
+    .nav-links {
+        list-style: none;
+        padding: 1rem;
+        flex-grow: 1;
+    }
+
+    .nav-links li {
+        margin-bottom: 1rem;
+    }
+
     .nav-links li a {
-      display: flex;
-      align-items: center;
-      padding: 0.8rem 1rem;
-      background-color: #1f2937;
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        background-color: #1f2937;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        gap: 10px;
     }
+
     .nav-links li a:hover {
-      background-color: #4b5563;
-      transform: translateX(5px);
+        background-color: #4b5563;
+        transform: translateX(5px);
     }
+
     .sidebar-footer {
-      padding: 1.5rem;
-      font-size: 0.9rem;
-      border-top: 1px solid #374151;
-      background-color: #0f172a;
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        border-top: 1px solid #374151;
+        background-color: #0f172a;
     }
-    .sidebar-footer p { margin-bottom: 0.3rem; color: #d1d5db; }
-    .sidebar-footer strong { color: #fbbf24; }
+
+    .sidebar-footer p {
+        margin-bottom: 0.3rem;
+        color: #d1d5db;
+    }
+
+    .sidebar-footer strong {
+        color: #fbbf24;
+    }
+
     .sidebar-footer .config-links {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
+
     .sidebar-footer .config-links a {
-      color: #60a5fa;
-      text-decoration: none;
-      font-weight: bold;
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: bold;
     }
+
     .sidebar-footer .config-links a:hover {
-      color: #93c5fd;
-      text-decoration: underline;
+        color: #93c5fd;
+        text-decoration: underline;
     }
+
+    /* ========== MAIN CONTENT ========== */
     main {
-      flex-grow: 1;
-      padding: 3rem;
-      background-color: #f9fafb;
-      overflow-y: auto;
+        flex-grow: 1;
+        padding: 2rem;
+        background-color: var(--light-bg);
+        overflow-y: auto;
     }
+
     section {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
     }
-    h2, h3 { color: #1f2937; margin-bottom: 1.2rem; }
+
+    h2, h3 {
+        color: var(--text-color);
+        margin-bottom: 1.2rem;
+    }
+
+    /* ========== FORMULÁRIOS ========== */
     label {
-      font-weight: 600;
-      margin-top: 1rem;
-      display: block;
-      color: #374151;
+        font-weight: 600;
+        margin-top: 1rem;
+        display: block;
+        color: #374151;
     }
+
     input, select, button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 1rem;
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
     }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
     button {
-      background-color: #3b82f6;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
-    button:hover { background-color: #2563eb; }
+
+    button:hover {
+        background-color: var(--primary-hover);
+    }
+
+    /* ========== TABELA ========== */
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      font-size: 0.95rem;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
     }
+
     table th, table td {
-      padding: 12px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
     }
-    table th { background-color: #f1f5f9; color: #374151; }
-    table tbody tr:nth-child(even) { background-color: #f9fafb; }
+
+    table th {
+        background-color: var(--table-header-bg);
+        color: #374151;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: var(--table-even-row);
+    }
+
+    /* ========== RESPONSIVIDADE ========== */
+    @media (max-width: 768px) {
+        main {
+            padding: 1rem;
+        }
+
+        section {
+            padding: 1.5rem;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+    }
+
+    .btn-danger {
+        background-color: #ef4444;
+    }
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .confirmacao-exclusao {
+        margin: 1rem 0;
+        padding: 1rem;
+        background-color: #fff3f3;
+        border-radius: 6px;
+        border-left: 4px solid #ef4444;
+    }
   </style>
 </head>
 <body>
 <aside>
-  <div>  <div class="sidebar-header">
-    <a href="/layout" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+  <div class="sidebar-header">
+    <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
   </div>
-    <ul class="nav-links">
-      <li><a href="/livros">📘 Livros</a></li>
-      <li><a href="/autores">🖊️ Autores</a></li>
-      <li><a href="/emprestimos">🔁 Empréstimos</a></li>
-      <li><a href="/editoras">🏢 Editoras</a></li>
-    </ul>
-  </div>
+  <ul class="nav-links">
+    <li><a href="/livros">📘 Livros</a></li>
+    <li><a href="/autores">🖊️ Autores</a></li>
+    <li><a href="/emprestimos">🔁 Empréstimos</a></li>
+    <li><a href="/editoras">🏢 Editoras</a></li>
+  </ul>
   <div class="sidebar-footer">
     <p>Você está navegando como:</p>
     <strong>Convidado</strong>
@@ -148,22 +266,24 @@
     <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
       <button onclick="mostrarSecao('cadastro')">➕ Cadastrar Editora</button>
       <button onclick="mostrarSecao('pesquisa')">🔍 Pesquisar Editoras</button>
+      <button onclick="mostrarSecao('atualizar')" class="btn-warning">✏️ Atualizar Editora</button>
+      <button onclick="mostrarSecao('apagar')" class="btn-danger">🗑️ Apagar Editora</button>
     </div>
   </section>
 
+  <!-- Seção de Cadastro -->
   <section id="secao-cadastro" style="display: none;">
     <h2>Cadastrar Editora</h2>
     <form th:action="@{/editoras/cadastrar}" method="post" th:object="${editoraDTO}">
       <label for="nome">Nome:</label>
       <input type="text" id="nome" th:field="*{nome}" placeholder="Nome da Editora" required />
-
       <label for="pais">País:</label>
       <input type="text" id="pais" th:field="*{pais}" placeholder="País de Origem" required />
-
       <button type="submit">Salvar Editora</button>
     </form>
   </section>
 
+  <!-- Seção de Pesquisa -->
   <section id="secao-pesquisa" style="display: none;">
     <h2>Pesquisar Editoras</h2>
     <form th:action="@{/editoras/pesquisar}" method="get">
@@ -178,6 +298,7 @@
         <th>ID</th>
         <th>Nome</th>
         <th>País</th>
+        <th>Ações</th>
       </tr>
       </thead>
       <tbody>
@@ -185,17 +306,114 @@
         <td th:text="${editora.id}"></td>
         <td th:text="${editora.nome}"></td>
         <td th:text="${editora.pais}"></td>
+        <td>
+          <div style="display: flex; gap: 5px;">
+            <button class="btn-warning" onclick="prepararAtualizacao(this)"
+                    th:data-id="${editora.id}" th:data-nome="${editora.nome}" th:data-pais="${editora.pais}">
+              Atualizar
+            </button>
+            <button class="btn-danger" onclick="prepararExclusao(this)"
+                    th:data-id="${editora.id}" th:data-nome="${editora.nome}">
+              Apagar
+            </button>
+          </div>
+        </td>
       </tr>
       </tbody>
     </table>
+  </section>
+
+  <!-- Seção de Atualização -->
+  <section id="secao-atualizar" style="display: none;">
+    <h2>Atualizar Editora</h2>
+    <form th:action="@{/editoras/atualizar}" method="post" th:object="${editoraUpdateDTO}">
+      <label>Selecione a Editora:</label>
+      <select id="select-editora-update" onchange="carregarDadosEditora(this)" required>
+        <option value="">Selecione:</option>
+        <option th:each="editora : ${todasEditoras}"
+                th:value="${editora.id}"
+                th:data-nome="${editora.nome}"
+                th:data-pais="${editora.pais}"
+                th:text="${editora.nome} + ' (' + ${editora.pais} + ')'">
+        </option>
+      </select>
+
+      <input type="hidden" th:field="*{id}" id="editora-update-id">
+
+      <label for="nome">Nome:</label>
+      <input type="text" id="editora-update-nome" th:field="*{nome}" placeholder="Nome da Editora" required>
+
+      <label for="pais">País:</label>
+      <input type="text" id="editora-update-pais" th:field="*{pais}" placeholder="País da Editora" required>
+
+      <button type="submit">Atualizar Editora</button>
+    </form>
+  </section>
+
+  <!-- Seção de Exclusão -->
+  <section id="secao-apagar" style="display: none;">
+    <h2>Apagar Editora</h2>
+    <form th:action="@{/editoras/apagar}" method="post">
+      <label>Selecione a Editora:</label>
+      <select id="select-editora-delete" onchange="preencherDadosExclusaoEditora(this)" required>
+        <option value="">Selecione:</option>
+        <option th:each="editora : ${todasEditoras}"
+                th:value="${editora.id}"
+                th:data-nome="${editora.nome}"
+                th:text="${editora.nome} + ' (' + ${editora.pais} + ')'">
+        </option>
+      </select>
+
+      <input type="hidden" id="editora-delete-id" name="id">
+
+      <div style="margin: 1rem 0; padding: 1rem; background-color: #fff3f3; border-radius: 6px;">
+        <p>Você está prestes a apagar a editora: <strong id="editora-delete-nome"></strong></p>
+        <p>Tem certeza que deseja continuar?</p>
+      </div>
+
+      <button type="submit" class="btn-danger">Confirmar Exclusão</button>
+      <button type="button" onclick="mostrarSecao('pesquisa')" style="margin-top: 10px;">Cancelar</button>
+    </form>
   </section>
 </main>
 
 <script>
   function mostrarSecao(secao) {
-    document.getElementById('secao-cadastro').style.display = 'none';
-    document.getElementById('secao-pesquisa').style.display = 'none';
-    document.getElementById('secao-' + secao).style.display = 'block';
+    const secoes = ['cadastro', 'pesquisa', 'atualizar', 'apagar'];
+    secoes.forEach(secaoAtual => {
+      document.getElementById('secao-' + secaoAtual).style.display = (secaoAtual === secao) ? 'block' : 'none';
+    });
+  }
+
+  function prepararAtualizacao(btn) {
+    const id = btn.getAttribute('data-id');
+    const nome = btn.getAttribute('data-nome');
+    const pais = btn.getAttribute('data-pais');
+
+    document.getElementById('editora-update-id').value = id;
+    document.getElementById('editora-update-nome').value = nome;
+    document.getElementById('editora-update-pais').value = pais;
+    mostrarSecao('atualizar');
+  }
+
+  function prepararExclusao(btn) {
+    const id = btn.getAttribute('data-id');
+    document.getElementById('id-apagar').value = id;
+    mostrarSecao('apagar');
+  }
+
+  function preencherDadosExclusaoEditora(select) {
+  const selectedOption = select.options[select.selectedIndex];
+  if (selectedOption.value) {
+    document.getElementById('editora-delete-id').value = selectedOption.value;
+    document.getElementById('editora-delete-nome').textContent = selectedOption.getAttribute('data-nome');
+  }
+  }
+
+  function carregarDadosEditora(select) {
+    const selectedOption = select.options[select.selectedIndex];
+    document.getElementById('editora-update-nome').value = selectedOption.getAttribute('data-nome');
+    document.getElementById('editora-update-pais').value = selectedOption.getAttribute('data-pais');
   }
 </script>
 </body>

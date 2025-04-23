@@ -1,8 +1,10 @@
 package com.example.libraryapi.service;
 
+import com.example.libraryapi.controller.common.enums.StatusEmprestimo;
 import com.example.libraryapi.controller.dto.UsuarioAtualizacaoDTO;
 import com.example.libraryapi.controller.dto.UsuarioDTO;
 import com.example.libraryapi.controller.mappers.UsuarioMapper;
+import com.example.libraryapi.model.Emprestimo;
 import com.example.libraryapi.model.Usuario;
 import com.example.libraryapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -133,6 +136,17 @@ public class UsuarioService implements UserDetailsService {
         usuarioDTO.setNome(usuario.getNome());
         usuarioDTO.setEmail(usuario.getEmail());
         return usuarioDTO;
+    }
+
+
+    public Optional<Usuario> buscarPrimeiroUsuario() {
+        return usuarioRepository.findAll()
+                .stream()
+                .findFirst();
+    }
+
+    public boolean existeEmail(String email) {
+        return usuarioRepository.existsByEmail(email);
     }
 
 }

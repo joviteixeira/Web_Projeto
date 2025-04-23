@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">Erro | Biblioteca Digital</title>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --error-color: #ef4444;
+            --background-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --text-color: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--background-gradient);
+            color: var(--text-color);
+            display: grid;
+            place-items: center;
+            line-height: 1.6;
+        }
+
+        .error-container {
+            max-width: 800px;
+            width: 90%;
+            padding: 3rem;
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            margin: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .error-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 180deg at 50% 50%,
+                #6366f133 0%,
+                #818cf833 25%,
+                #a5b4fc33 50%,
+                #c7d2fe33 75%,
+                #e0e7ff33 100%
+            );
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        .error-header {
+            margin-bottom: 2rem;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .error-code {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--error-color);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+
+        .error-details {
+            background: rgba(241, 245, 249, 0.5);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 2rem 0;
+            text-align: left;
+            border-left: 4px solid var(--error-color);
+        }
+
+        .actions-container {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-button {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .primary-action {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .primary-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .secondary-action {
+            background: #f1f5f9;
+            color: var(--text-color);
+            border: 1px solid #e2e8f0;
+        }
+
+        .secondary-action:hover {
+            background: #e2e8f0;
+        }
+
+        .decorative-wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg"><path fill="%236366f1" fill-opacity="0.1" d="M0,256L60,245.3C120,235,240,213,360,192C480,171,600,149,720,160C840,171,960,213,1080,213.3C1200,213,1320,171,1380,149.3L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>');
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 2rem;
+                border-radius: 1rem;
+            }
+
+            .error-code {
+                font-size: 3rem;
+            }
+
+            .error-message {
+                font-size: 1.25rem;
+            }
+        }
+
+        .dark-mode {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <div class="error-header">
+        <div class="error-icon">🚨</div>
+        <div class="error-code" th:text="${codigo}">500</div>
+        <h1 class="error-message" th:text="${mensagemPrincipal}">Ocorreu um erro inesperado</h1>
+    </div>
+
+    <div th:if="${detalhes}" class="error-details">
+        <h3>Detalhes técnicos:</h3>
+        <pre th:text="${detalhes}">Detalhes do erro...</pre>
+    </div>
+
+    <div class="actions-container">
+        <a href="/" class="action-button primary-action">
+            🏠 Voltar para a página inicial
+        </a>
+    </div>
+</div>
+
+<div class="decorative-wave"></div>
+
+<script>
+    // Sistema simples de dark mode
+    const toggleDarkMode = () => {
+        document.body.classList.toggle('dark-mode');
+        if (document.body.classList.contains('dark-mode')) {
+            document.documentElement.style.setProperty('--background-gradient', 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)');
+            document.documentElement.style.setProperty('--text-color', '#f8fafc');
+            document.documentElement.style.setProperty('--card-bg', 'rgba(30, 41, 59, 0.95)');
+        } else {
+            document.documentElement.style.setProperty('--background-gradient', 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)');
+            document.documentElement.style.setProperty('--text-color', '#1e293b');
+            document.documentElement.style.setProperty('--card-bg', 'rgba(255, 255, 255, 0.95)');
+        }
+    }
+
+    // Adicionar botão de dark mode
+    const darkModeButton = document.createElement('div');
+    darkModeButton.className = 'dark-mode';
+    darkModeButton.innerHTML = '🌓';
+    darkModeButton.onclick = toggleDarkMode;
+    document.body.appendChild(darkModeButton);
+
+    // Efeito de entrada suave
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
+</script>
+</body>
+</html>

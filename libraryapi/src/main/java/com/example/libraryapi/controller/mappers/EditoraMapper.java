@@ -4,18 +4,18 @@ import com.example.libraryapi.controller.dto.EditoraDTO;
 import com.example.libraryapi.controller.dto.LivroDTO;
 import com.example.libraryapi.model.Editora;
 import com.example.libraryapi.model.Livro;
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface EditoraMapper {
 
-    @Mapping(target = "livros", source = "livros", qualifiedByName = "mapLivros")
+    @Mapping(target = "livros", source = "livros")
     EditoraDTO toDTO(Editora editora);
 
     @Mapping(target = "livros", ignore = true)
@@ -24,21 +24,28 @@ public interface EditoraMapper {
     @Mapping(target = "dataAtualizacao", ignore = true)
     Editora toEntity(EditoraDTO dto);
 
-    @Named("mapLivros")
-    default List<LivroDTO> mapLivros(List<Livro> livros) {
-        if(livros == null) return List.of();
-        return livros.stream().map(this::toLivroDTO).toList();
-    }
+    List<LivroDTO> mapLivros(List<Livro> livros);
 
-    private LivroDTO toLivroDTO(Livro livro) {
-        return new LivroDTO(
-                livro.getIsbn(),
-                livro.getTitulo(),
-                livro.getDataPublicacao(),
-                livro.getGenero(),
-                livro.getAutor() != null ? livro.getAutor().getId() : null, // Null check
-                livro.getEditora() != null ? livro.getEditora().getId() : null, // Null check
-                livro.getPreco()
-        );
+
+    default LivroDTO toLivroDTO(Livro livro) {
+        LivroDTO dto = new LivroDTO();
+        dto.setIsbn(livro.getIsbn());
+        dto.setTitulo(livro.getTitulo());
+        dto.setDataPublicacao(livro.getDataPublicacao());
+
+        if (livro.getGenero() != null) {
+            dto.setGenero(livro.getGenero());
+        }
+
+        if (livro.getAutor() != null) {
+            dto.setAutorId(livro.getAutor().getId());
+        }
+
+        if (livro.getEditora() != null) {
+            dto.setEditoraId(livro.getEditora().getId());
+        }
+
+        return dto;
     }
 }
+

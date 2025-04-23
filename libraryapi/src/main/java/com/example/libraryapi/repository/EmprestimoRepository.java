@@ -19,4 +19,11 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
     long countByStatus(@Param("status") StatusEmprestimo status);
 
     List<Emprestimo> findByDataDevolucaoRealIsNull();
+
+    @Query("SELECT e FROM Emprestimo e " +
+            "JOIN FETCH e.livro " +
+            "WHERE e.usuario.id = :usuarioId " +
+            "AND e.status = :status")
+    List<Emprestimo> findByUsuarioIdAndStatus(UUID usuarioId, StatusEmprestimo status);
+
 }

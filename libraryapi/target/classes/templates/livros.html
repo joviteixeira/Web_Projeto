@@ -6,150 +6,247 @@
   <title>Livros</title>
   <link rel="stylesheet" href="/css/estilo.css">
   <style>
-    body {
-      display: flex;
-      height: 100vh;
-      background-color: #f3f4f6;
-      font-family: 'Segoe UI', sans-serif;
+    :root {
+        --sidebar-width: 280px;
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --text-color: #1f2937;
+        --light-bg: #f9fafb;
+        --white: #ffffff;
+        --border-color: #d1d5db;
+        --table-header-bg: #f1f5f9;
+        --table-even-row: #f9fafb;
     }
 
-    /* Sidebar já existente */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--light-bg);
+    }
+
+    /* ========== SIDEBAR ========== */
     aside {
-      width: 280px;
-      background: linear-gradient(180deg, #111827, #1f2937);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, #111827, #1f2937);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        height: 100vh;
     }
 
     .sidebar-header {
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 1.7rem;
-      font-weight: bold;
-      background-color: #0f172a;
-      border-bottom: 1px solid #374151;
-      letter-spacing: 1px;
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 1.7rem;
+        font-weight: bold;
+        background-color: #0f172a;
+        border-bottom: 1px solid #374151;
+        letter-spacing: 1px;
     }
 
     .nav-links {
-      list-style: none;
-      padding: 1rem;
+        list-style: none;
+        padding: 1rem;
+        flex-grow: 1;
     }
 
     .nav-links li {
-      margin-bottom: 1rem;
+        margin-bottom: 1rem;
     }
 
     .nav-links li a {
-      display: flex;
-      align-items: center;
-      padding: 0.8rem 1rem;
-      background-color: #1f2937;
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        background-color: #1f2937;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        gap: 10px;
     }
 
     .nav-links li a:hover {
-      background-color: #4b5563;
-      transform: translateX(5px);
+        background-color: #4b5563;
+        transform: translateX(5px);
     }
 
     .sidebar-footer {
-      padding: 1.5rem;
-      font-size: 0.9rem;
-      border-top: 1px solid #374151;
-      background-color: #0f172a;
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        border-top: 1px solid #374151;
+        background-color: #0f172a;
     }
 
     .sidebar-footer p {
-      margin-bottom: 0.3rem;
-      color: #d1d5db;
+        margin-bottom: 0.3rem;
+        color: #d1d5db;
     }
 
     .sidebar-footer strong {
-      color: #fbbf24;
+        color: #fbbf24;
     }
 
     .sidebar-footer .config-links {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .sidebar-footer .config-links a {
-      color: #60a5fa;
-      text-decoration: none;
-      font-weight: bold;
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: bold;
     }
 
     .sidebar-footer .config-links a:hover {
-      color: #93c5fd;
-      text-decoration: underline;
+        color: #93c5fd;
+        text-decoration: underline;
     }
 
+    /* ========== MAIN CONTENT ========== */
     main {
-      flex-grow: 1;
-      padding: 3rem;
-      background-color: #f9fafb;
-      overflow-y: auto;
+        flex-grow: 1;
+        padding: 2rem;
+        background-color: var(--light-bg);
+        overflow-y: auto;
     }
 
     section {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        background-color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
     }
 
     h2 {
-      margin-bottom: 1.5rem;
-      color: #1f2937;
+        color: var(--text-color);
+        margin-bottom: 1.5rem;
+    }
+
+    /* ========== FORMULÁRIOS ========== */
+    label {
+        font-weight: 600;
+        margin-top: 1rem;
+        display: block;
+        color: #374151;
     }
 
     input, select, button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 1rem;
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
     }
 
     button {
-      background-color: #3b82f6;
-      color: white;
-      cursor: pointer;
-      border: none;
-      font-weight: bold;
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
 
     button:hover {
-      background-color: #2563eb;
+        background-color: var(--primary-hover);
+    }
+
+    /* ========== COMPONENTES ESPECÍFICOS ========== */
+    .btn-danger {
+        background-color: #ef4444;
+    }
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .nav-buttons button {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .form-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
 
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
     }
 
     table th, table td {
-      padding: 12px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
     }
 
     table th {
-      background-color: #f1f5f9;
+        background-color: var(--table-header-bg);
+        color: #374151;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: var(--table-even-row);
+    }
+
+    /* ========== RESPONSIVIDADE ========== */
+    @media (max-width: 768px) {
+        main {
+            padding: 1rem;
+        }
+
+        section {
+            padding: 1.5rem;
+        }
+
+        .nav-buttons button {
+            min-width: 100%;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
     }
   </style>
 </head>
@@ -157,7 +254,7 @@
 <aside>
   <div>
     <div class="sidebar-header">
-      <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+      <a href="/layout" style="color: white; text-decoration: none;">📚 Biblioteca</a>
     </div>
     <ul class="nav-links">
       <li><a href="/livros">📘 Livros</a></li>
@@ -186,10 +283,12 @@
   <div class="nav-buttons">
     <button onclick="mostrarSecao('cadastro')" class="active">📖 Cadastrar Livro</button>
     <button onclick="mostrarSecao('pesquisa')">🔍 Pesquisar Livros</button>
+    <button onclick="mostrarSecao('atualizar')" class="btn-warning">✏️ Atualizar Livro</button>
+    <button onclick="mostrarSecao('apagar')" class="btn-danger">🗑️ Apagar Livro</button>
   </div>
 
   <!-- Seção de Cadastro -->
-  <section id="secao-cadastro">
+  <section id="secao-cadastro" style="display: none;">
     <h2>Cadastro de Novo Livro</h2>
     <form th:action="@{/livros/cadastrar}" method="post" th:object="${livroDTO}">
       <div class="form-grid">
@@ -248,7 +347,7 @@
           </div>
         </div>
 
-        <!-- Campo Editora Adicionado -->
+
         <div class="form-group">
           <label>Editora:</label>
           <select th:field="*{editoraId}" required>
@@ -259,17 +358,6 @@
           </select>
           <div th:if="${#fields.hasErrors('editoraId')}" class="error-message">
             <span th:errors="*{editoraId}"></span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Preço (R$):</label>
-          <input type="number" th:field="*{preco}"
-                 step="0.01"
-                 placeholder="0.00"
-                 min="0">
-          <div th:if="${#fields.hasErrors('preco')}" class="error-message">
-            <span th:errors="*{preco}"></span>
           </div>
         </div>
       </div>
@@ -315,7 +403,6 @@
           <th>Publicação</th>
           <th>Autor</th>
           <th>Gênero</th>
-          <th>Preço</th>
         </tr>
         </thead>
         <tbody>
@@ -323,9 +410,8 @@
           <td th:text="${livro.isbn}"></td>
           <td th:text="${livro.titulo}"></td>
           <td th:text="${#temporals.format(livro.dataPublicacao, 'dd/MM/yyyy')}"></td>
-          <td th:text="${livro.autor.nome}"></td>
+          <td th:text="${livro.autorNome}"></td>
           <td th:text="${livro.genero}"></td>
-          <td th:text="${#numbers.formatCurrency(livro.preco)}">R$ </td>
         </tr>
         </tbody>
       </table>
@@ -335,13 +421,130 @@
       <p>Nenhum livro encontrado com os critérios informados.</p>
     </div>
   </section>
+
+
+<section id="secao-atualizar" style="display: none;">
+  <h2>Atualizar Livro</h2>
+  <form th:action="@{/livros/atualizar}" method="post" th:object="${livroUpdateDTO}">
+    <label>Selecione o Livro:</label>
+    <select id="select-livro-update" onchange="carregarDadosLivro(this)" required>
+      <option value="">Selecione:</option>
+      <option th:each="livro : ${todosLivros}" 
+              th:value="${livro.id}"
+              th:data-isbn="${livro.isbn}"
+              th:data-titulo="${livro.titulo}"
+              th:data-dataPublicacao="${#temporals.format(livro.dataPublicacao, 'yyyy-MM-dd')}"
+              th:data-genero="${livro.genero}"
+              th:data-autorId="${livro.autor.id}"
+              th:data-editoraId="${livro.editora.id}"
+              th:text="${livro.titulo} + ' (' + ${livro.isbn} + ')'">
+      </option>
+    </select>
+
+    <input type="hidden" th:field="*{id}" id="livro-update-id">
+    
+    <div class="form-group">
+      <label>ISBN:</label>
+      <input type="text" th:field="*{isbn}" id="livro-update-isbn" placeholder="Ex: 978-85-123-4567-0" required>
+    </div>
+
+    <div class="form-group">
+      <label>Título:</label>
+      <input type="text" th:field="*{titulo}" id="livro-update-titulo" placeholder="Título completo" required>
+    </div>
+
+    <div class="form-group">
+      <label>Data de Publicação:</label>
+      <input type="date" th:field="*{dataPublicacao}" id="livro-update-dataPublicacao" required>
+    </div>
+
+    <div class="form-group">
+      <label>Gênero:</label>
+      <select th:field="*{genero}" id="livro-update-genero" required>
+        <option value="">Selecione...</option>
+        <option th:each="genero : ${generos}" 
+                th:value="${genero}"
+                th:text="${genero}"></option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Autor:</label>
+      <select th:field="*{autorId}" id="livro-update-autorId" required>
+        <option value="">Selecione...</option>
+        <option th:each="autor : ${autores}" 
+                th:value="${autor.id}"
+                th:text="${autor.nome}"></option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Editora:</label>
+      <select th:field="*{editoraId}" id="livro-update-editoraId" required>
+        <option value="">Selecione...</option>
+        <option th:each="editora : ${editoras}" 
+                th:value="${editora.id}"
+                th:text="${editora.nome}"></option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-warning">Atualizar Livro</button>
+  </form>
+</section>
+
+<!-- Seção de Exclusão -->
+<section id="secao-apagar" style="display: none;">
+  <h2>Apagar Livro</h2>
+  <form th:action="@{/livros/apagar}" method="post">
+    <label>Selecione o Livro:</label>
+    <select id="select-livro-delete" onchange="preencherDadosExclusao(this)" required>
+      <option value="">Selecione:</option>
+      <option th:each="livro : ${todosLivros}" 
+              th:value="${livro.id}"
+              th:data-titulo="${livro.titulo}"
+              th:text="${livro.titulo} + ' (' + ${livro.isbn} + ')'">
+      </option>
+    </select>
+    
+    <input type="hidden" id="livro-delete-id" name="id">
+    
+    <div style="margin: 1rem 0; padding: 1rem; background-color: #fff3f3; border-radius: 6px;">
+      <p>Você está prestes a apagar o livro: <strong id="livro-delete-titulo"></strong></p>
+      <p>Tem certeza que deseja continuar?</p>
+    </div>
+
+    <button type="submit" class="btn-danger">Confirmar Exclusão</button>
+    <button type="button" onclick="mostrarSecao('pesquisa')" style="margin-top: 10px;">Cancelar</button>
+  </form>
+</section>
 </main>
 
 <script>
+  function carregarDadosLivro(select) {
+    const selectedOption = select.options[select.selectedIndex];
+    if (selectedOption.value) {
+      document.getElementById('livro-update-id').value = selectedOption.value;
+      document.getElementById('livro-update-isbn').value = selectedOption.getAttribute('data-isbn');
+      document.getElementById('livro-update-titulo').value = selectedOption.getAttribute('data-titulo');
+      document.getElementById('livro-update-dataPublicacao').value = selectedOption.getAttribute('data-dataPublicacao');
+      document.getElementById('livro-update-genero').value = selectedOption.getAttribute('data-genero');
+      document.getElementById('livro-update-autorId').value = selectedOption.getAttribute('data-autorId');
+      document.getElementById('livro-update-editoraId').value = selectedOption.getAttribute('data-editoraId');
+    }
+  }
+
+  function preencherDadosExclusao(select) {
+    const selectedOption = select.options[select.selectedIndex];
+    document.getElementById('livro-delete-id').value = selectedOption.value;
+    document.getElementById('livro-delete-titulo').textContent = selectedOption.getAttribute('data-titulo');
+  }
+
   function mostrarSecao(secao) {
     const sections = {
       'cadastro': document.getElementById('secao-cadastro'),
-      'pesquisa': document.getElementById('secao-pesquisa')
+      'pesquisa': document.getElementById('secao-pesquisa'),
+      'atualizar': document.getElementById('secao-atualizar'),
+      'apagar': document.getElementById('secao-apagar')
     };
 
     Object.values(sections).forEach(section => {
@@ -364,18 +567,8 @@
     const params = new URLSearchParams(window.location.search);
     if (params.toString()) {
       mostrarSecao('pesquisa');
-    } else {
-      mostrarSecao('cadastro');
     }
   });
-
-  const hasErrors = document.querySelector('.error-message');
-  if (hasErrors) {
-    window.scrollTo({
-      top: document.getElementById('secao-cadastro').offsetTop,
-      behavior: 'smooth'
-    });
-  }
 </script>
 </body>
 </html>

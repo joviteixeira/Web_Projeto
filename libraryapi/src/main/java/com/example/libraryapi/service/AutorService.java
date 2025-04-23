@@ -1,10 +1,12 @@
 package com.example.libraryapi.service;
 
+import com.example.libraryapi.controller.dto.AutorDTO;
 import com.example.libraryapi.execptions.OperacaoNaoPermitadaException;
 import com.example.libraryapi.model.Autor;
 import com.example.libraryapi.repository.AutorRepository;
 import com.example.libraryapi.repository.LivroRepository;
 import com.example.libraryapi.validator.AutorValidator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -31,12 +33,17 @@ public class AutorService {
         return repository.findById(id);
     }
 
-    public void atualizar(Autor autor){
-        if(autor.getId() == null){
-            throw new IllegalArgumentException("Para atualizar, é necessario que o autor já esta salvo na base de dadnos.");
+    public void atualizarAutor(Autor autor) {
+        Optional<Autor> autorOpt = repository.findById(autor.getId());
+        if (autorOpt.isPresent()) {
+            Autor autores = autorOpt.get();
+            autores.setNome(autor.getNome());
+            autores.setDataNascimento(autor.getDataNascimento());
+            autores.setNacionalidade(autor.getNacionalidade());
+            repository.save(autores);
+        } else {
+            throw new EntityNotFoundException("Autor não encontrado.");
         }
-        validator.validar(autor);
-        repository.save(autor);
     }
 
 
@@ -48,7 +55,6 @@ public class AutorService {
     }
 
 
-    //Pesquisa dinamica
     public List<Autor> pesquisaByExample(String nome, String nacionalidade){
         var autor = new Autor();
         autor.setNome(nome);
@@ -63,6 +69,7 @@ public class AutorService {
         Example<Autor> autorExample = Example.of(autor, matcher);
         return repository.findAll(autorExample);
     }
+
 
     public boolean possuiLivro(Autor autor){
         return livroRepository.existsByAutor(autor);

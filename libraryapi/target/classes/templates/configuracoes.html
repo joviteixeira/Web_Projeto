@@ -6,21 +6,91 @@
   <title>Configurações</title>
   <link rel="stylesheet" href="/css/estilo.css">
   <style>
+    :root {
+        --sidebar-width: 280px;
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --danger-color: #ef4444;
+        --danger-hover: #dc2626;
+        --warning-color: #fbbf24;
+        --warning-hover: #f59e0b;
+        --text-color: #1f2937;
+        --light-bg: #f9fafb;
+        --white: #ffffff;
+        --border-color: #d1d5db;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
     body {
         display: flex;
-        height: 100vh;
+        min-height: 100vh;
         background-color: #f3f4f6;
         font-family: 'Segoe UI', sans-serif;
     }
 
+
     aside {
-        width: 280px;
+        width: var(--sidebar-width);
         background: linear-gradient(180deg, #111827, #1f2937);
         color: white;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        transition: width 0.3s ease;
+    }
+
+
+    @media (max-width: 768px) {
+        aside {
+            width: 80px;
+        }
+
+        .sidebar-header a {
+            display: none;
+        }
+
+        .sidebar-header::after {
+            content: "⚙️";
+            font-size: 1.8rem;
+        }
+
+        .nav-links li a span {
+            display: none;
+        }
+
+        .nav-links li a {
+            justify-content: center;
+            padding: 0.8rem 0;
+        }
+
+        .sidebar-footer {
+            display: none;
+        }
+
+        /* Mostra texto ao passar o mouse */
+        aside:hover {
+            width: var(--sidebar-width);
+        }
+
+        aside:hover .sidebar-header a,
+        aside:hover .nav-links li a span,
+        aside:hover .sidebar-footer {
+            display: block;
+        }
+
+        aside:hover .sidebar-header::after {
+            display: none;
+        }
     }
 
     .sidebar-header {
@@ -52,6 +122,7 @@
         text-decoration: none;
         font-size: 1rem;
         transition: all 0.3s ease;
+        gap: 10px;
     }
 
     .nav-links li a:hover {
@@ -66,38 +137,18 @@
         background-color: #0f172a;
     }
 
-    .sidebar-footer p {
-        margin-bottom: 0.3rem;
-        color: #d1d5db;
-    }
-
-    .sidebar-footer strong {
-        color: #fbbf24;
-    }
-
-    .sidebar-footer .config-links {
-        margin-top: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .sidebar-footer .config-links a {
-        color: #60a5fa;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .sidebar-footer .config-links a:hover {
-        color: #93c5fd;
-        text-decoration: underline;
-    }
 
     main {
-        flex-grow: 1;
-        padding: 3rem;
-        background-color: #f9fafb;
+        flex: 1;
+        padding: 2rem;
+        background-color: var(--light-bg);
         overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+        main {
+            padding: 1.5rem;
+        }
     }
 
     section {
@@ -108,10 +159,17 @@
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
+    @media (max-width: 768px) {
+        section {
+            padding: 1.5rem;
+        }
+    }
+
     h2 {
         margin-bottom: 1.5rem;
-        color: #1f2937;
+        color: var(--text-color);
     }
+
 
     input, button, select {
         display: block;
@@ -120,14 +178,13 @@
         margin-bottom: 1.5rem;
         border-radius: 12px;
         font-size: 1rem;
-        border: 1px solid #d1d5db;
-        box-sizing: border-box;
+        border: 1px solid var(--border-color);
         transition: all 0.3s ease;
     }
 
     input:focus, select:focus, button:focus {
         outline: none;
-        border-color: #3b82f6;
+        border-color: var(--primary-color);
         box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
     }
 
@@ -139,9 +196,14 @@
         font-weight: bold;
     }
 
-    button:hover {
-        background-color: #2563eb;
+    button[type="submit"] {
+        background-color: var(--primary-color);
     }
+
+    button[type="submit"]:hover {
+        background-color: var(--primary-hover);
+    }
+
 
     table {
         width: 100%;
@@ -149,41 +211,58 @@
         margin-top: 1rem;
     }
 
+    @media (max-width: 768px) {
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+
     table th, table td {
         padding: 15px;
         border-bottom: 1px solid #e5e7eb;
         text-align: left;
-        vertical-align: middle;
     }
 
     table th {
         background-color: #f1f5f9;
     }
 
+
     .actions {
-        display: none;
+        display: flex;
         gap: 10px;
     }
 
+    @media (max-width: 576px) {
+        .actions {
+            flex-direction: column;
+        }
+    }
+
     .actions button {
-        background-color: #fbbf24;
-        color: white;
+        padding: 8px 12px;
         font-size: 0.9rem;
-        padding: 5px 10px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
+        border-radius: 6px;
     }
 
-    .actions button:hover {
-        background-color: #f59e0b;
+    .actions button:first-child {
+        background-color: var(--warning-color);
     }
 
-    .show-actions .actions {
-        display: flex;
+    .actions button:first-child:hover {
+        background-color: var(--warning-hover);
     }
 
-    /* Modal de Edição */
+    .actions button:last-child {
+        background-color: var(--danger-color);
+    }
+
+    .actions button:last-child:hover {
+        background-color: var(--danger-hover);
+    }
+
+    /* ========== MODAL ========== */
     .modal {
         display: none;
         position: fixed;
@@ -201,8 +280,16 @@
         background-color: white;
         padding: 2rem;
         border-radius: 15px;
-        width: 500px;
+        width: 100%;
+        max-width: 500px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 576px) {
+        .modal-content {
+            padding: 1.5rem;
+            margin: 0 1rem;
+        }
     }
 
     .modal-header {
@@ -213,86 +300,40 @@
         color: #333;
     }
 
-    .modal-body {
-        margin-bottom: 1rem;
-    }
-
-    .modal-body label {
-        font-size: 1rem;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-
     .modal-footer {
-        text-align: center;
+        display: flex;
+        gap: 10px;
+        margin-top: 1.5rem;
     }
 
     .modal-footer button {
-        background-color: #3b82f6;
-        color: white;
-        cursor: pointer;
-        border: none;
-        padding: 10px;
-        font-size: 1rem;
-        border-radius: 6px;
+        flex: 1;
     }
 
-    .modal-footer button:hover {
-        background-color: #2563eb;
-    }
 
-    .error-message {
-        color: red;
-        font-size: 0.9rem;
-    }
-
-    /* Melhorias no select */
-    select {
-        width: 100%;
-        padding: 12px;
-        background-color: #f9fafb;
-        border: 1px solid #d1d5db;
-        border-radius: 12px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    select:hover {
-        border-color: #3b82f6;
-    }
-
-    select:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
-        outline: none;
-    }
-
-    /* Esconder campos de edição até que sejam selecionados */
     .editField {
         display: none;
+        margin-top: 1rem;
     }
 
-    .editField input {
-        font-size: 1rem;
-        padding: 10px;
-        border-radius: 12px;
+    .editField label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
     }
-  </style>
+</style>
 </head>
 <body>
 <aside>
   <div>
     <div class="sidebar-header">
-      <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+      <a href="/libraryapi/target/classes/templates/home.html" style="color: white; text-decoration: none;">📚 Biblioteca</a>
     </div>
     <ul class="nav-links">
       <li><a href="/livros">📘 Livros</a></li>
       <li><a href="/autores">🖊️ Autores</a></li>
       <li><a href="/emprestimos">🔁 Empréstimos</a></li>
       <li><a href="/editoras">🏢 Editoras</a></li>
-      <li><a href="/configuracoes">⚙️ Configurações</a></li>
     </ul>
   </div>
   <div class="sidebar-footer">
@@ -320,7 +361,7 @@
       <td th:text="${usuario.nome}"></td>
       <td th:text="${usuario.email}"></td>
       <td>
-        <!-- Botão de editar com atributo data-* para usar no JS -->
+
         <button type="button"
                 th:attr="data-id=${usuario.id},
                          data-nome=${usuario.nome},
@@ -329,7 +370,7 @@
           Editar
         </button>
 
-        <!-- Botão de deletar com form correto -->
+
         <form th:action="@{/configuracoes/deletar/{id}(id=${usuario.id})}" method="post"
               onsubmit="return confirm('Tem certeza que deseja deletar este usuário?');"
               style="display:inline;">
@@ -341,7 +382,7 @@
   </table>
 </main>
 
-<!-- Modal de Edição -->
+
 <div id="editModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">

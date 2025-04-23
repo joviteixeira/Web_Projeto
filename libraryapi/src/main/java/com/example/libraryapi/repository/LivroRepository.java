@@ -111,5 +111,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecific
  );
   @Query("SELECT l FROM Livro l WHERE l.disponivel = true")
    List<Livro> findLivrosDisponiveis();
+  List<Livro> findByTituloContainingAndIsbnContainingAndGenero(String titulo, String isbn, GeneroEnum genero);
 
 }

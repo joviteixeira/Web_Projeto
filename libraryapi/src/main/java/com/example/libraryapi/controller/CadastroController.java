@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class CadastroController {
 
-    private final UsuarioService usuarioService; // ou qualquer nome do seu serviço
+    private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
 
     public CadastroController(UsuarioService usuarioService, PasswordEncoder passwordEncoder) {
@@ -23,13 +23,26 @@ public class CadastroController {
     @GetMapping("/cadastro")
     public String mostrarTelaCadastro(Model model) {
         model.addAttribute("usuario", new UsuarioDTO());
-        return "cadastro"; // cadastro.html
+        return "cadastro";
     }
 
     @PostMapping("/cadastro")
-    public String cadastrarUsuario(@ModelAttribute UsuarioDTO usuario) {
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha())); // se for usar Spring Security
-        usuarioService.salvarUsuario(usuario); // método para persistir no banco
-        return "redirect:/login";
+    public String cadastrarUsuario(@ModelAttribute("usuario") UsuarioDTO usuario, Model model) { // Nome explícito
+        try {
+            if (usuarioService.existeEmail(usuario.getEmail())) {
+                model.addAttribute("erro", "Este e-mail já está cadastrado");
+                model.addAttribute("usuario", usuario); // Reenvia o objeto para o template
+                return "cadastro";
+            }
+
+            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+            usuarioService.salvarUsuario(usuario);
+            return "redirect:/login?cadastroSucesso";
+
+        } catch (Exception e) {
+            model.addAttribute("erro", "Ocorreu um erro durante o cadastro");
+            model.addAttribute("usuario", usuario); // Mantém os dados digitados
+            return "cadastro";
+        }
     }
 }

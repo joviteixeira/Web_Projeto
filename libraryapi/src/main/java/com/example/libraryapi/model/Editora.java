@@ -1,5 +1,6 @@
 package com.example.libraryapi.model;
 
+import com.example.libraryapi.controller.dto.LivroDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,7 +43,8 @@ public class Editora {
 
     // Mantenha o relacionamento com Livro se necessário
     @OneToMany(mappedBy = "editora")
-    private List<Livro> livros = new ArrayList<>();
+    private List<Livro> livros;
+
 
     // Construtor para o DTO
     public Editora(String nome, String pais) {

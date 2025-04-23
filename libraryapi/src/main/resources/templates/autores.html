@@ -1,289 +1,565 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autores</title>
-    <link rel="stylesheet" href="/css/estilo.css">
-    <style>
-        body {
-          display: flex;
-          height: 100vh;
-          background-color: #f3f4f6;
-          font-family: 'Segoe UI', sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autores</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+  <style>
+    :root {
+        --sidebar-width: 280px;
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --text-color: #1f2937;
+        --light-bg: #f9fafb;
+        --white: #ffffff;
+        --border-color: #d1d5db;
+        --table-header-bg: #f1f5f9;
+        --table-even-row: #f9fafb;
+    }
 
-        aside {
-          width: 280px;
-          background: linear-gradient(180deg, #111827, #1f2937);
-          color: white;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-        .sidebar-header {
-          text-align: center;
-          padding: 2rem 1rem;
-          font-size: 1.7rem;
-          font-weight: bold;
-          background-color: #0f172a;
-          border-bottom: 1px solid #374151;
-          letter-spacing: 1px;
-        }
+    body {
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--light-bg);
+    }
 
-        .nav-links {
-          list-style: none;
-          padding: 1rem;
-        }
+    /* ========== SIDEBAR ========== */
+    aside {
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, #111827, #1f2937);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
 
-        .nav-links li {
-          margin-bottom: 1rem;
-        }
+    .sidebar-header {
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 1.7rem;
+        font-weight: bold;
+        background-color: #0f172a;
+        border-bottom: 1px solid #374151;
+        letter-spacing: 1px;
+    }
 
-        .nav-links li a {
-          display: flex;
-          align-items: center;
-          padding: 0.8rem 1rem;
-          background-color: #1f2937;
-          border-radius: 8px;
-          color: white;
-          text-decoration: none;
-          font-size: 1rem;
-          transition: all 0.3s ease;
-        }
+    .nav-links {
+        list-style: none;
+        padding: 1rem;
+        flex-grow: 1;
+    }
 
-        .nav-links li a:hover {
-          background-color: #4b5563;
-          transform: translateX(5px);
-        }
+    .nav-links li {
+        margin-bottom: 1rem;
+    }
 
-        .sidebar-footer {
-          padding: 1.5rem;
-          font-size: 0.9rem;
-          border-top: 1px solid #374151;
-          background-color: #0f172a;
-        }
+    .nav-links li a {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        background-color: #1f2937;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        gap: 10px;
+    }
 
-        .sidebar-footer p {
-          margin-bottom: 0.3rem;
-          color: #d1d5db;
-        }
+    .nav-links li a:hover {
+        background-color: #4b5563;
+        transform: translateX(5px);
+    }
 
-        .sidebar-footer strong {
-          color: #fbbf24;
-        }
+    .sidebar-footer {
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        border-top: 1px solid #374151;
+        background-color: #0f172a;
+    }
 
-        .sidebar-footer .config-links {
-          margin-top: 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
+    .sidebar-footer p {
+        margin-bottom: 0.3rem;
+        color: #d1d5db;
+    }
 
-        .sidebar-footer .config-links a {
-          color: #60a5fa;
-          text-decoration: none;
-          font-weight: bold;
-        }
+    .sidebar-footer strong {
+        color: #fbbf24;
+    }
 
-        .sidebar-footer .config-links a:hover {
-          color: #93c5fd;
-          text-decoration: underline;
-        }
+    .sidebar-footer .config-links {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 
+    .sidebar-footer .config-links a {
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .sidebar-footer .config-links a:hover {
+        color: #93c5fd;
+        text-decoration: underline;
+    }
+
+    /* ========== MAIN CONTENT ========== */
+    main {
+        flex-grow: 1;
+        padding: 2rem;
+        background-color: var(--light-bg);
+        overflow-y: auto;
+    }
+
+    section {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    h2 {
+        color: var(--text-color);
+        margin-bottom: 1.5rem;
+    }
+
+    /* ========== FORMULÁRIOS ========== */
+    label {
+        font-weight: 600;
+        margin-top: 1rem;
+        display: block;
+        color: #374151;
+    }
+
+    input, select, button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    button {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: var(--primary-hover);
+    }
+
+    /* ========== TABELA ========== */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
+    }
+
+    table th, table td {
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+    }
+
+    table th {
+        background-color: var(--table-header-bg);
+        color: #374151;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: var(--table-even-row);
+    }
+
+    /* ========== COMPONENTES ESPECÍFICOS ========== */
+    .btn-danger {
+        background-color: #ef4444;
+    }
+    .btn-danger:hover {
+        background-color: #dc2626;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .nav-buttons button {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .confirmacao-exclusao {
+        margin: 1rem 0;
+        padding: 1rem;
+        background-color: #fff3f3;
+        border-radius: 6px;
+        border-left: 4px solid #ef4444;
+    }
+
+    /* ========== RESPONSIVIDADE ========== */
+    @media (max-width: 768px) {
         main {
-          flex-grow: 1;
-          padding: 3rem;
-          background-color: #f9fafb;
-          overflow-y: auto;
+            padding: 1rem;
         }
 
         section {
-          background-color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        h2 {
-          margin-bottom: 1.5rem;
-          color: #1f2937;
-        }
-
-        input, button {
-          display: block;
-          width: 100%;
-          padding: 10px;
-          margin-bottom: 1rem;
-          border: 1px solid #d1d5db;
-          border-radius: 6px;
-          font-size: 1rem;
-        }
-
-        button {
-          background-color: #3b82f6;
-          color: white;
-          cursor: pointer;
-          border: none;
-          font-weight: bold;
-        }
-
-        button:hover {
-          background-color: #2563eb;
+            padding: 1.5rem;
         }
 
         table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 1rem;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
-        table th, table td {
-          padding: 12px;
-          border-bottom: 1px solid #e5e7eb;
-          text-align: left;
+        .nav-buttons button {
+            min-width: 100%;
         }
-
-        table th {
-          background-color: #f1f5f9;
-        }
-    </style>
+    }
+  </style>
 </head>
+
 <body>
-<aside>
+  <aside>
     <div>
-        <div class="sidebar-header">
-            <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="/livros">📘 Livros</a></li>
-            <li><a href="/autores">🖊️ Autores</a></li>
-            <li><a href="/emprestimos">🔁 Empréstimos</a></li>
-            <li><a href="/editoras">🏢 Editoras</a></li>
-        </ul>
+      <div class="sidebar-header">
+        <a href="/" style="color: white; text-decoration: none;">📚 Biblioteca</a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/livros">📘 Livros</a></li>
+        <li><a href="/autores">🖊️ Autores</a></li>
+        <li><a href="/emprestimos">🔁 Empréstimos</a></li>
+        <li><a href="/editoras">🏢 Editoras</a></li>
+      </ul>
     </div>
     <div class="sidebar-footer">
-        <p>Modo de acesso:</p>
-        <strong th:text="${usuario?.nome ?: 'Visitante'}">Visitante</strong>
-        <div class="config-links">
-            <a href="/login" th:if="${usuario == null}">Entrar</a>
-        </div>
+      <p>Modo de acesso:</p>
+      <strong th:text="${usuario?.nome ?: 'Visitante'}">Visitante</strong>
+      <div class="config-links">
+        <a href="/login" th:if="${usuario == null}">Entrar</a>
+      </div>
     </div>
-</aside>
+  </aside>
 
-<main>
-    <!-- Mensagens globais -->
+  <main>
+
     <div th:if="${mensagem}" class="alert alert-success">
-        <span th:text="${mensagem}"></span>
+      <span th:text="${mensagem}"></span>
     </div>
     <div th:if="${mensagemErro}" class="alert alert-danger">
-        <span th:text="${mensagemErro}"></span>
+      <span th:text="${mensagemErro}"></span>
     </div>
 
     <div class="nav-buttons">
-        <button onclick="mostrarSecao('cadastro')" class="active">Cadastrar Autor</button>
-        <button onclick="mostrarSecao('pesquisa')">Pesquisar Autores</button>
+      <button onclick="mostrarSecao('cadastro')">Cadastrar Autor</button>
+      <button onclick="mostrarSecao('pesquisa')" class="active">Pesquisar Autores</button>
+      <button onclick="mostrarSecao('atualizar')">Atualizar Autor</button>  <!--Caso não seja necessária essa opção, pode apagar o botão-->
+      <button onclick="mostrarSecao('apagar')" class="btn-danger">Apagar Autor</button>
     </div>
 
-    <!-- Seção de Cadastro -->
-    <section id="secao-cadastro">
-        <h2>Cadastrar Novo Autor</h2>
-        <form th:action="@{/autores/cadastrar}" method="post" th:object="${autorDTO}">
-            <div class="form-group">
-                <label>Nome:</label>
-                <input type="text" th:field="*{nome}" placeholder="Nome completo" required>
-                <div th:if="${#fields.hasErrors('nome')}" class="error-message">
-                    <span th:errors="*{nome}"></span>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label>Data de Nascimento:</label>
-                <input type="date" th:field="*{dataNascimento}" required>
-                <div th:if="${#fields.hasErrors('dataNascimento')}" class="error-message">
-                    <span th:errors="*{dataNascimento}"></span>
-                </div>
-            </div>
+    <section id="secao-cadastro" style="display: none;">
+      <h2>Cadastrar Novo Autor</h2>
+      <form th:action="@{/autores/cadastrar}" method="post" th:object="${autorDTO}">
+        <div class="form-group">
+          <label>Nome:</label>
+          <input type="text" th:field="*{nome}" placeholder="Nome completo" required>
+          <div th:if="${#fields.hasErrors('nome')}" class="error-message">
+            <span th:errors="*{nome}"></span>
+          </div>
+        </div>
 
-            <div class="form-group">
-                <label>Nacionalidade:</label>
-                <input type="text" th:field="*{nacionalidade}" placeholder="País de origem" required>
-                <div th:if="${#fields.hasErrors('nacionalidade')}" class="error-message">
-                    <span th:errors="*{nacionalidade}"></span>
-                </div>
-            </div>
+        <div class="form-group">
+          <label>Data de Nascimento:</label>
+          <input type="date" th:field="*{dataNascimento}" required>
+          <div th:if="${#fields.hasErrors('dataNascimento')}" class="error-message">
+            <span th:errors="*{dataNascimento}"></span>
+          </div>
+        </div>
 
-            <button type="submit">Salvar Autor</button>
-        </form>
+        <div class="form-group">
+          <label>Nacionalidade:</label>
+          <input type="text" th:field="*{nacionalidade}" placeholder="País de origem" required>
+          <div th:if="${#fields.hasErrors('nacionalidade')}" class="error-message">
+            <span th:errors="*{nacionalidade}"></span>
+          </div>
+        </div>
+
+        <button type="submit">Salvar Autor</button>
+      </form>
     </section>
 
-    <!-- Seção de Pesquisa -->
+
     <section id="secao-pesquisa" style="display: none;">
-        <h2>Pesquisar Autores</h2>
-        <form th:action="@{/autores}" method="get">
-            <div class="search-fields">
-                <input type="text" name="nome" placeholder="Filtrar por nome"
-                       th:value="${param.nome}">
-                <input type="text" name="nacionalidade" placeholder="Filtrar por nacionalidade"
-                       th:value="${param.nacionalidade}">
-                <button type="submit">Aplicar Filtros</button>
-            </div>
-        </form>
-
-        <div th:if="${not #lists.isEmpty(autores)}" class="results-table">
-            <table>
-                <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Nacionalidade</th>
-                    <th>Data de Nascimento</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="autor : ${autores}">
-                    <td th:text="${autor.nome}"></td>
-                    <td th:text="${autor.nacionalidade}"></td>
-                    <td th:text="${#temporals.format(autor.dataNascimento, 'dd/MM/yyyy')}"></td>
-                </tr>
-                </tbody>
-            </table>
+      <h2>Pesquisar Autores</h2>
+      <form th:action="@{/autores}" method="get">
+        <div class="search-fields">
+          <input type="text" name="nome" placeholder="Filtrar por nome" th:value="${param.nome}">
+          <input type="text" name="nacionalidade" placeholder="Filtrar por nacionalidade"
+            th:value="${param.nacionalidade}">
+          <button type="submit">Aplicar Filtros</button>
         </div>
+      </form>
 
-        <div th:if="${#lists.isEmpty(autores)}" class="no-results">
-            <p>Nenhum autor encontrado com os critérios informados.</p>
-        </div>
+      <div th:if="${not #lists.isEmpty(autores)}" class="results-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Nacionalidade</th>
+              <th>Data de Nascimento</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="autor : ${autores}">
+              <td th:text="${autor.nome}"></td>
+              <td th:text="${autor.nacionalidade}"></td>
+              <td th:text="${#temporals.format(autor.dataNascimento, 'dd/MM/yyyy')}"></td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-warning" onclick="prepararAtualizacao(this)" 
+                          th:data-id="${autor.id}">Atualizar</button>
+                  <button class="btn-danger" onclick="prepararExclusao(this)" 
+                          th:data-id="${autor.id}" th:data-nome="${autor.nome}">Apagar</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div th:if="${#lists.isEmpty(autores)}" class="no-results">
+        <p>Nenhum autor encontrado com os critérios informados.</p>
+      </div>
     </section>
-</main>
 
-<script>
-    // Controle de exibição das seções
+
+<section id="secao-atualizar" class="hidden">
+  <h2>Atualizar Autor</h2>
+  <form th:action="@{/autores/atualizar}" method="post" th:object="${autorDTO}">
+    <label>Selecione o Autor:</label>
+    <select id="select-autor-update" onchange="carregarDadosAutor(this)" required>
+      <option value="">Selecione:</option>
+      <option th:each="autor : ${todosAutores}" 
+              th:value="${autor.id}"
+              th:data-nome="${autor.nome}"
+              th:data-nacionalidade="${autor.nacionalidade}"
+              th:data-dataNascimento="${#temporals.format(autor.dataNascimento, 'dd/MM/yyyy')}"
+              th:text="${autor.nome} + ' (' + ${autor.nacionalidade} + ')'">
+      </option>
+    </select>
+
+    <input type="hidden" th:field="*{id}" id="autor-update-id" name="id">
+    
+    <div class="form-group">
+      <label>Nome:</label>
+      <input type="text" th:field="*{nome}" id="autor-update-nome" placeholder="Nome completo" required>
+    </div>
+
+    <div class="form-group">
+      <label>Data de Nascimento:</label>
+      <input type="date" th:field="*{dataNascimento}" id="autor-update-dataNascimento" required>
+    </div>
+
+    <div class="form-group">
+      <label>Nacionalidade:</label>
+      <input type="text" th:field="*{nacionalidade}" id="autor-update-nacionalidade" placeholder="País de origem" required>
+    </div>
+
+    <button type="submit" class="btn-warning">Atualizar Autor</button>
+  </form>
+</section>
+
+
+<section id="secao-apagar" class="hidden">
+  <h2>Apagar Autor</h2>
+  <form th:action="@{/autores/apagar}" method="post">
+    <label>Selecione o Autor:</label>
+    <select id="select-autor-delete" onchange="preencherNomeExclusao(this)" required>
+      <option value="">Selecione:</option>
+      <option th:each="autor : ${todosAutores}" 
+              th:value="${autor.id}"
+              th:data-nome="${autor.nome}"
+              th:text="${autor.nome} + ' (' + ${autor.nacionalidade} + ')'">
+      </option>
+    </select>
+    
+    <input type="hidden" id="autor-delete-id" name="id">
+    
+    <div style="margin: 1rem 0; padding: 1rem; background-color: #fff3f3; border-radius: 6px;">
+      <p>Você está prestes a apagar o autor: <strong id="autor-delete-nome"></strong></p>
+      <p>Tem certeza que deseja continuar?</p>
+    </div>
+
+    <button type="submit" class="btn-danger">Confirmar Exclusão</button>
+    <button type="button" onclick="mostrarSecao('pesquisa')" style="margin-top: 10px;">Cancelar</button>
+  </form>
+</section>
+
+  </main>
+
+  <script>
+
     function mostrarSecao(secao) {
-        const sections = {
-            'cadastro': document.getElementById('secao-cadastro'),
-            'pesquisa': document.getElementById('secao-pesquisa')
-        };
+  const sections = {
+    'cadastro': document.getElementById('secao-cadastro'),
+    'pesquisa': document.getElementById('secao-pesquisa'),
+    'atualizar': document.getElementById('secao-atualizar'),
+    'apagar': document.getElementById('secao-apagar')
+  };
 
-        // Alternar visibilidade
-        Object.entries(sections).forEach(([key, element]) => {
-            element.style.display = key === secao ? 'block' : 'none';
-        });
 
-        // Atualizar estado dos botões
-        document.querySelectorAll('.nav-buttons button').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent.toLowerCase().includes(secao));
-        });
-    }
+  Object.entries(sections).forEach(([key, element]) => {
+    element.style.display = key === secao ? 'block' : 'none';
+  });
 
-    // Mostrar seção correta ao carregar com parâmetros
-    window.addEventListener('load', () => {
-        const params = new URLSearchParams(window.location.search);
-        if(params.toString()) {
-            mostrarSecao('pesquisa');
-        }
-    });
-</script>
+
+  document.querySelectorAll('.nav-buttons button').forEach(btn => {
+    const btnText = btn.textContent.toLowerCase();
+    btn.classList.toggle('active', 
+      (secao === 'cadastro' && btnText.includes('cadastrar')) ||
+      (secao === 'pesquisa' && btnText.includes('pesquisar')) ||
+      (secao === 'atualizar' && btnText.includes('atualizar')) ||
+      (secao === 'apagar' && btnText.includes('apagar'))
+    );
+  });
+
+
+  if (secao === 'atualizar') {
+    document.getElementById('select-autor-update').selectedIndex = 0;
+    document.getElementById('autor-update-id').value = '';
+    document.getElementById('autor-update-nome').value = '';
+    document.getElementById('autor-update-nacionalidade').value = '';
+    document.getElementById('autor-update-dataNascimento').value = '';
+  } else if (secao === 'apagar') {
+    document.getElementById('select-autor-delete').selectedIndex = 0;
+    document.getElementById('autor-delete-id').value = '';
+    document.getElementById('autor-delete-nome').textContent = '';
+  }
+}
+
+
+function prepararAtualizacao(button) {
+    const autorId = button.getAttribute('data-id');
+    const row = button.closest('tr');
+    const cells = row.querySelectorAll('td');
+
+
+    document.getElementById('autor-update-id').value = autorId;
+    document.getElementById('autor-update-nome').value = cells[0].textContent;
+    document.getElementById('autor-update-nacionalidade').value = cells[1].textContent;
+
+    const dataParts = cells[2].textContent.split('/');
+    const dataFormatada = `${dataParts[2]}-${dataParts[1]}-${dataParts[0]}`;
+    document.getElementById('autor-update-dataNascimento').value = dataFormatada;
+
+    mostrarSecao('atualizar');
+}
+
+
+function prepararExclusao(button) {
+  document.getElementById('autorId').value = button.getAttribute('data-id');
+  document.getElementById('autorNome').textContent = button.getAttribute('data-nome');
+  mostrarSecao('apagar');
+}
+
+
+function mostrarSecao(secao) {
+
+  
+  const sections = {
+    'cadastro': document.getElementById('secao-cadastro'),
+    'pesquisa': document.getElementById('secao-pesquisa'),
+    'atualizar': document.getElementById('secao-atualizar'),
+    'apagar': document.getElementById('secao-apagar')
+  };
+
+  
+
+  Object.entries(sections).forEach(([key, element]) => {
+    element.style.display = key === secao ? 'block' : 'none';
+  });
+
+
+  document.querySelectorAll('.nav-buttons button').forEach(btn => {
+    const btnText = btn.textContent.toLowerCase();
+    btn.classList.toggle('active', 
+      (secao === 'cadastro' && btnText.includes('cadastrar')) ||
+      (secao === 'pesquisa' && btnText.includes('pesquisar')) ||
+      (secao === 'atualizar' && btnText.includes('atualizar')) ||
+      (secao === 'apagar' && btnText.includes('apagar'))
+    );
+  });
+}
+
+
+function carregarDadosAutor(select) {
+  const selectedOption = select.options[select.selectedIndex];
+  if (selectedOption.value) {
+    document.getElementById('autor-update-id').value = selectedOption.value;
+    document.getElementById('autor-update-nome').value = selectedOption.getAttribute('data-nome');
+    document.getElementById('autor-update-nacionalidade').value = selectedOption.getAttribute('data-nacionalidade');
+
+    const dataParts = selectedOption.getAttribute('data-dataNascimento').split('/');
+    const dataFormatada = `${dataParts[2]}-${dataParts[1]}-${dataParts[0]}`;
+    document.getElementById('autor-update-dataNascimento').value = dataFormatada;
+  } else {
+    document.getElementById('autor-update-id').value = '';
+    document.getElementById('autor-update-nome').value = '';
+    document.getElementById('autor-update-nacionalidade').value = '';
+    document.getElementById('autor-update-dataNascimento').value = '';
+  }
+}
+
+
+function preencherNomeExclusao(select) {
+  const selectedOption = select.options[select.selectedIndex];
+  const nomeAutor = selectedOption.getAttribute('data-nome') || '';
+  document.getElementById('autor-delete-id').value = selectedOption.value;
+  document.getElementById('autor-delete-nome').textContent = nomeAutor;
+}
+  </script>
 </body>
 </html>

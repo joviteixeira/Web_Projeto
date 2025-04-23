@@ -5,113 +5,189 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { display: flex; min-height: 100vh; background-color: #f9fafb; }
-        aside {
-          width: 280px;
-          background: linear-gradient(180deg, #111827, #1f2937);
-          color: white;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+      * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+      body { 
+        display: flex; 
+        min-height: 100vh; 
+        background-color: #f9fafb; 
+        flex-direction: row; /* Garante que sempre fique em linha */
+      }
+      
+      /* SIDEBAR ORIGINAL (100% igual) */
+      aside {
+        width: 280px;
+        background: linear-gradient(180deg, #111827, #1f2937);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        flex-shrink: 0;
+        overflow-y: auto;
+      }
+      .sidebar-header {
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 1.8rem;
+        font-weight: bold;
+        background-color: #0f172a;
+        border-bottom: 1px solid #374151;
+      }
+      .nav-links { 
+        list-style: none; 
+        padding: 1rem; 
+      }
+      .nav-links li { 
+        margin-bottom: 1rem; 
+      }
+      .nav-links li a {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        background-color: #1f2937;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      .nav-links li a:hover {
+        background-color: #4b5563;
+        transform: translateX(5px);
+      }
+      .sidebar-footer {
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        border-top: 1px solid #374151;
+        background-color: #0f172a;
+      }
+      .sidebar-footer p { 
+        margin-bottom: 0.3rem; 
+        color: #d1d5db; 
+      }
+      .sidebar-footer strong { 
+        color: #fbbf24; 
+      }
+      .sidebar-footer .config-links {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .sidebar-footer .config-links a {
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      .sidebar-footer .config-links a:hover {
+        color: #93c5fd;
+        text-decoration: underline;
+      }
+    
+      /* MAIN CONTENT ORIGINAL (100% igual) */
+      main {
+        flex-grow: 1;
+        padding: 3rem;
+        overflow-y: auto;
+        background: linear-gradient(to right, #f9fafb, #e5e7eb);
+        min-width: 0;
+      }
+      .welcome-box {
+        background: linear-gradient(to right, #3b82f6, #2563eb);
+        color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+      .welcome-box h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .welcome-box p {
+        font-size: 1.1rem;
+      }
+      .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+      .card {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+      }
+      .card h3 {
+        font-size: 1.4rem;
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .card p {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2563eb;
+      }
+    
+      /* AJUSTES RESPONSIVOS (modificados apenas para manter sidebar à esquerda) */
+      @media (max-width: 1024px) {
+        aside { width: 240px; }
+        main { padding: 2rem; }
+      }
+      
+      @media (max-width: 768px) {
+        aside { 
+          width: 200px; /* Mais estreita mas mantém estilo */
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          z-index: 100;
         }
         .sidebar-header {
-          text-align: center;
-          padding: 2rem 1rem;
-          font-size: 1.8rem;
-          font-weight: bold;
-          background-color: #0f172a;
-          border-bottom: 1px solid #374151;
+          padding: 1.5rem 0.5rem;
+          font-size: 1.5rem;
         }
-        .nav-links { list-style: none; padding: 1rem; }
-        .nav-links li { margin-bottom: 1rem; }
         .nav-links li a {
-          display: flex;
-          align-items: center;
-          padding: 0.8rem 1rem;
-          background-color: #1f2937;
-          border-radius: 8px;
-          color: white;
-          text-decoration: none;
-          font-size: 1rem;
-          transition: all 0.3s ease;
+          padding: 0.8rem 0.5rem;
+          justify-content: center;
         }
-        .nav-links li a:hover {
-          background-color: #4b5563;
-          transform: translateX(5px);
+        .nav-links li a span {
+          display: none; /* Texto escondido em mobile */
         }
         .sidebar-footer {
-          padding: 1.5rem;
-          font-size: 0.9rem;
-          border-top: 1px solid #374151;
-          background-color: #0f172a;
-        }
-        .sidebar-footer p { margin-bottom: 0.3rem; color: #d1d5db; }
-        .sidebar-footer strong { color: #fbbf24; }
-        .sidebar-footer .config-links {
-          margin-top: 1rem;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-        .sidebar-footer .config-links a {
-          color: #60a5fa;
-          text-decoration: none;
-          font-weight: bold;
-        }
-        .sidebar-footer .config-links a:hover {
-          color: #93c5fd;
-          text-decoration: underline;
+          display: none; /* Footer escondido em mobile */
         }
         main {
-          flex-grow: 1;
-          padding: 3rem;
-          overflow-y: auto;
-          background: linear-gradient(to right, #f9fafb, #e5e7eb);
+          padding: 1.5rem;
         }
-        .welcome-box {
-          background: linear-gradient(to right, #3b82f6, #2563eb);
-          color: white;
-          padding: 2rem;
-          border-radius: 12px;
-          margin-bottom: 2rem;
-          text-align: center;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+      
+      @media (max-width: 480px) {
+        aside { width: 60px; }
+        .sidebar-header {
+          font-size: 0; /* Esconde texto */
+          padding: 1rem 0;
         }
-        .welcome-box h2 {
-          font-size: 2rem;
+        .sidebar-header::before {
+          content: "☰";
+          font-size: 1.5rem;
+        }
+        .nav-links {
+          padding: 0.5rem;
+        }
+        .nav-links li {
           margin-bottom: 0.5rem;
         }
-        .welcome-box p {
-          font-size: 1.1rem;
+        main {
+          padding: 1rem;
         }
-        .card-container {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 2rem;
-        }
-        .card {
-          background: white;
-          padding: 2rem;
-          border-radius: 16px;
-          box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-          text-align: center;
-          transition: transform 0.3s ease;
-        }
-        .card:hover {
-          transform: translateY(-5px);
-        }
-        .card h3 {
-          font-size: 1.4rem;
-          color: #111827;
-          margin-bottom: 0.5rem;
-        }
-        .card p {
-          font-size: 2rem;
-          font-weight: bold;
-          color: #2563eb;
-        }
+      }
     </style>
 </head>
 <body>
@@ -128,7 +204,7 @@
     </div>
     <div class="sidebar-footer">
         <p>Você está logado como:</p>
-        <strong th:text="${usuario.nome}">Nome do Usuário</strong>
+        <strong th:text="Convidado">Nome do Usuário</strong>
         <div class="config-links">
             <a href="/configuracoes">Editar Perfil</a>
             <a href="/logout">Sair</a>

@@ -5,121 +5,321 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Empréstimos</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { display: flex; min-height: 100vh; background-color: #f3f4f6; }
+    :root {
+        --sidebar-width: 280px;
+        --primary-color: #3b82f6;
+        --primary-hover: #2563eb;
+        --danger-color: #ef4444;
+        --text-color: #1f2937;
+        --light-bg: #f9fafb;
+        --white: #ffffff;
+        --border-color: #d1d5db;
+        --table-header-bg: #f1f5f9;
+        --table-even-row: #f9fafb;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--light-bg);
+    }
+
+
     aside {
-      width: 280px;
-      background: linear-gradient(180deg, #111827, #1f2937);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        width: var(--sidebar-width);
+        background: linear-gradient(180deg, #111827, #1f2937);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        transition: width 0.3s ease;
     }
+
+
+    @media (max-width: 768px) {
+        aside {
+            width: 80px;
+        }
+        
+        .sidebar-header a {
+            display: none;
+        }
+        
+        .sidebar-header::after {
+            content: "📚";
+            font-size: 1.8rem;
+        }
+        
+        .nav-links li a span {
+            display: none;
+        }
+        
+        .nav-links li a {
+            justify-content: center;
+            padding: 0.8rem 0;
+        }
+        
+        .sidebar-footer {
+            display: none;
+        }
+        
+
+        aside:hover {
+            width: var(--sidebar-width);
+        }
+        
+        aside:hover .sidebar-header a,
+        aside:hover .nav-links li a span,
+        aside:hover .sidebar-footer {
+            display: block;
+        }
+        
+        aside:hover .sidebar-header::after {
+            display: none;
+        }
+    }
+
     .sidebar-header {
-      text-align: center;
-      padding: 2rem 1rem;
-      font-size: 1.7rem;
-      font-weight: bold;
-      background-color: #0f172a;
-      border-bottom: 1px solid #374151;
-      letter-spacing: 1px;
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 1.7rem;
+        font-weight: bold;
+        background-color: #0f172a;
+        border-bottom: 1px solid #374151;
+        letter-spacing: 1px;
     }
-    .nav-links { list-style: none; padding: 1rem; }
-    .nav-links li { margin-bottom: 1rem; }
+
+    .nav-links {
+        list-style: none;
+        padding: 1rem;
+    }
+
+    .nav-links li {
+        margin-bottom: 1rem;
+    }
+
     .nav-links li a {
-      display: flex;
-      align-items: center;
-      padding: 0.8rem 1rem;
-      background-color: #1f2937;
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        background-color: #1f2937;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        gap: 10px;
     }
+
     .nav-links li a:hover {
-      background-color: #4b5563;
-      transform: translateX(5px);
+        background-color: #4b5563;
+        transform: translateX(5px);
     }
+
     .sidebar-footer {
-      padding: 1.5rem;
-      font-size: 0.9rem;
-      border-top: 1px solid #374151;
-      background-color: #0f172a;
+        padding: 1.5rem;
+        font-size: 0.9rem;
+        border-top: 1px solid #374151;
+        background-color: #0f172a;
     }
-    .sidebar-footer p { margin-bottom: 0.3rem; color: #d1d5db; }
-    .sidebar-footer strong { color: #fbbf24; }
+
+    .sidebar-footer p {
+        margin-bottom: 0.3rem;
+        color: #d1d5db;
+    }
+
+    .sidebar-footer strong {
+        color: #fbbf24;
+    }
+
     .sidebar-footer .config-links {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
+
     .sidebar-footer .config-links a {
-      color: #60a5fa;
-      text-decoration: none;
-      font-weight: bold;
+        color: #60a5fa;
+        text-decoration: none;
+        font-weight: bold;
     }
+
     .sidebar-footer .config-links a:hover {
-      color: #93c5fd;
-      text-decoration: underline;
+        color: #93c5fd;
+        text-decoration: underline;
     }
+
+
     main {
-      flex-grow: 1;
-      padding: 3rem;
-      background-color: #f9fafb;
-      overflow-y: auto;
+        flex-grow: 1;
+        padding: 2rem;
+        background-color: var(--light-bg);
+        overflow-y: auto;
     }
+
+    @media (max-width: 768px) {
+        main {
+            padding: 1.5rem;
+        }
+    }
+
     section {
-      background-color: white;
-      padding: 2rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
     }
-    h2, h3 { color: #1f2937; margin-bottom: 1.2rem; }
+
+    @media (max-width: 768px) {
+        section {
+            padding: 1.5rem;
+        }
+    }
+
+    h2, h3 {
+        color: var(--text-color);
+        margin-bottom: 1.2rem;
+    }
+
+
     label {
-      font-weight: 600;
-      margin-top: 1rem;
-      display: block;
-      color: #374151;
+        font-weight: 600;
+        margin-top: 1rem;
+        display: block;
+        color: #374151;
     }
+
     input, select, button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 1rem;
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
     }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
     button {
-      background-color: #3b82f6;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
-    button:hover { background-color: #2563eb; }
+
+    button:hover {
+        background-color: var(--primary-hover);
+    }
+
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 576px) {
+        .button-group {
+            flex-direction: column;
+        }
+    }
+
+    .button-group button {
+        flex: 1;
+        min-width: 120px;
+    }
+
+
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      font-size: 0.95rem;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 0.95rem;
     }
+
+    @media (max-width: 768px) {
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+    }
+
     table th, table td {
-      padding: 12px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
     }
-    table th { background-color: #f1f5f9; color: #374151; }
-    table tbody tr:nth-child(even) { background-color: #f9fafb; }
-  </style>
+
+    table th {
+        background-color: var(--table-header-bg);
+        color: #374151;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: var(--table-even-row);
+    }
+
+
+    .error-message {
+        color: var(--danger-color);
+        background-color: #fee2e2;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--danger-color);
+    }
+
+    .error-message {
+    border: none;     
+    background: none;  
+    padding: 0;       
+    margin: 0;         
+}
+
+
+    #secao-emprestimo,
+    #secao-livrosEmprestados,
+    #secao-livrosDisponiveis {
+        display: none;
+    }
+
+    #secao-emprestimo.active,
+    #secao-livrosEmprestados.active,
+    #secao-livrosDisponiveis.active {
+        display: block;
+    }
+
+
+</style>
 </head>
 <body>
 <aside>
@@ -135,7 +335,7 @@
   </div>
   <div class="sidebar-footer">
     <p>Você está logado como:</p>
-    <strong th:text="${usuario.nome}">Nome do Usuário</strong>
+    <strong th:text="Convidado">Nome do Usuário</strong>
     <div class="config-links">
       <a href="/configuracoes">Editar Perfil</a>
       <a href="/logout">Sair</a>
@@ -145,28 +345,39 @@
 
 <main>
   <section>
-    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-      <button onclick="mostrarSecao('emprestimo')">📗 Registrar Empréstimo</button>
+    <div class="button-group">
+      <button onclick="mostrarSecao('emprestimo')" class="active">📗 Registrar Empréstimo</button>
+      <button onclick="mostrarSecao('baixa')">📘 Dar Baixa no Livro</button>
       <button onclick="mostrarSecao('livrosEmprestados')">📕 Livros Emprestados</button>
-      <button onclick="mostrarSecao('livrosDisponiveis')">📘 Livros Disponíveis</button>
+      <button onclick="mostrarSecao('livrosDisponiveis')">📙 Livros Disponíveis</button>
     </div>
   </section>
 
-  <!-- Empréstimo -->
+
   <section id="secao-emprestimo">
     <h2>Registrar Empréstimo</h2>
 
-    <div th:if="${erro}" style="color: red;">
-      <p th:text="${erro}"></p>
+    <div th:if="${erro}" class="error-message">
+    <p th:text="${erro}"></p>
     </div>
 
     <form th:action="@{/emprestimos/registrar}" method="post" th:object="${emprestimoDTO}">
-      <input type="hidden" th:field="*{usuarioId}"  />
+      <label>Selecione o Usuário:</label>
+      <select th:field="*{usuarioId}" required>
+        <option value="">Selecione:</option>
+        <option th:each="usuario : ${todosUsuarios}"
+                th:value="${usuario.id}"
+                th:text="${usuario.nome}">
+        </option>
+      </select>
 
-      <label for="livro">Livro:</label>
-      <select id="livro" th:field="*{livroId}" required>
-        <option value="" disabled selected>Selecione o Livro</option>
-        <option th:each="livro : ${livrosDisponiveis}" th:value="${livro.id}" th:text="${livro.titulo}"></option>
+      <label>Selecione o Livro:</label>
+      <select th:field="*{livroId}" required>
+        <option value="">Selecione:</option>
+        <option th:each="livro : ${livrosDisponiveis}"
+                th:value="${livro.id}"
+                th:text="${livro.titulo} + ' - ' + ${livro.autor?.nome}">
+        </option>
       </select>
 
       <label for="dataEmprestimo">Data do Empréstimo:</label>
@@ -179,7 +390,7 @@
     </form>
   </section>
 
-  <!-- Livros Emprestados -->
+
   <section id="secao-livrosEmprestados" style="display: none;">
     <h2>Livros Emprestados</h2>
     <table th:if="${not #lists.isEmpty(livrosEmprestados)}">
@@ -209,7 +420,7 @@
     <p th:if="${#lists.isEmpty(livrosEmprestados)}">Nenhum livro emprestado.</p>
   </section>
 
-  <!-- Livros Disponíveis -->
+
   <section id="secao-livrosDisponiveis" style="display: none;">
     <h2>Livros Disponíveis</h2>
     <table th:if="${not #lists.isEmpty(livrosDisponiveis)}">
@@ -230,7 +441,39 @@
     </table>
     <p th:if="${#lists.isEmpty(livrosDisponiveis)}">Nenhum livro disponível.</p>
   </section>
+
+
+<section id="secao-baixa" style="display: none;">
+  <h2>Dar Baixa no Livro</h2>
+  
+  <div th:if="${mensagemBaixa}" class="alert alert-success">
+    <span th:text="${mensagemBaixa}"></span>
+  </div>
+  
+  <form th:action="@{/emprestimos/baixa}" method="post">
+    <label>Selecione o Usuário:</label>
+    <select id="select-usuario-baixa" onchange="carregarLivrosEmprestados(this.value)" required>
+      <option value="">Selecione:</option>
+      <option th:each="usuario : ${todosUsuarios}" 
+              th:value="${usuario.id}"
+              th:text="${usuario.nome}">
+      </option>
+    </select>
+    
+    <label>Selecione o Livro:</label>
+    <select id="select-livro-baixa" name="emprestimoId" required disabled>
+      <option value="">Primeiro selecione um usuário</option>
+    </select>
+    
+    <label>Data de Devolução Real:</label>
+    <input type="date" name="dataDevolucaoReal" required th:value="${#temporals.format(today, 'yyyy-MM-dd')}">
+    
+    <button type="submit" class="btn-danger">Registrar Baixa</button>
+  </form>
+</section>
+
 </main>
+
 <script>
   function mostrarSecao(secao) {
     document.getElementById('secao-emprestimo').style.display = 'none';
@@ -253,6 +496,65 @@
       }
     });
   });
+
+
+function carregarLivrosEmprestados(usuarioId) {
+  const livroSelect = document.getElementById('select-livro-baixa');
+  
+  if (!usuarioId) {
+    livroSelect.innerHTML = '<option value="">Selecione um usuário</option>';
+    livroSelect.disabled = true;
+    return;
+  }
+
+  fetch(`/emprestimos/usuario/${usuarioId}/livros`)
+    .then(response => {
+      if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+     livroSelect.innerHTML = '<option value="">Selecione:</option>';
+         if (data.length === 0) {
+          livroSelect.innerHTML += '<option value="">Nenhum livro emprestado</option>';
+          } else {
+           data.forEach(emprestimo => {
+              const option = document.createElement('option');
+              option.value = emprestimo.id; // ID do empréstimo
+              option.textContent = `${emprestimo.livroTitulo} (Status: ${emprestimo.status})`;
+             livroSelect.appendChild(option);
+    });
+  }
+  livroSelect.disabled = false;
+})
+    .catch(error => {
+      console.error('Erro:', error);
+      livroSelect.innerHTML = '<option value="">Erro ao carregar livros</option>';
+      livroSelect.disabled = false;
+    });
+}
+
+
+function mostrarSecao(secao) {
+  const sections = ['emprestimo', 'baixa', 'livrosEmprestados', 'livrosDisponiveis'];
+  
+  sections.forEach(s => {
+    const element = document.getElementById(`secao-${s}`);
+    if (element) {
+      element.style.display = s === secao ? 'block' : 'none';
+    }
+  });
+
+  document.querySelectorAll('.button-group button').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.includes(secao));
+  });
+  
+
+  if (secao === 'baixa') {
+    document.getElementById('select-usuario-baixa').selectedIndex = 0;
+    document.getElementById('select-livro-baixa').innerHTML = '<option value="">Primeiro selecione um usuário</option>';
+    document.getElementById('select-livro-baixa').disabled = true;
+  }
+}
 </script>
 </body>
 </html>

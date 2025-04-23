@@ -1,97 +1,155 @@
 package com.example.libraryapi.controller;
 
+import com.example.libraryapi.controller.common.enums.StatusEmprestimo;
 import com.example.libraryapi.controller.dto.EmprestimoDTO;
+import com.example.libraryapi.controller.dto.EmprestimoRespostaDTO;
 import com.example.libraryapi.model.Emprestimo;
 import com.example.libraryapi.model.Livro;
 import com.example.libraryapi.model.Usuario;
-import com.example.libraryapi.repository.LivroRepository;
-import com.example.libraryapi.repository.UsuarioRepository;
 import com.example.libraryapi.service.EmprestimoService;
 import com.example.libraryapi.service.LivroService;
 import com.example.libraryapi.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/emprestimos")
 public class EmprestimoController {
 
-    @Autowired
-    private EmprestimoService emprestimoService;
+    private final EmprestimoService emprestimoService;
+    private final LivroService livroService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    private LivroService livroService;
+    public EmprestimoController(EmprestimoService emprestimoService, LivroService livroService, UsuarioService usuarioService) {
+        this.emprestimoService = emprestimoService;
+        this.livroService = livroService;
+        this.usuarioService = usuarioService;
+    }
 
-    @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
-    private LivroRepository livroRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    // Carregar o formulário de empréstimo com livros disponíveis
     @GetMapping
-    public String mostrarEmprestimos(Model model) {
-        Usuario usuario = usuarioService.getUsuarioMock();
-        EmprestimoDTO dto = new EmprestimoDTO();
-        dto.setUsuarioId(usuario.getId()); // <-- isso é o que faltava
+    public String mostrarTelaEmprestimos(Model model) {
+        model.addAttribute("emprestimoDTO", new EmprestimoDTO());
+        model.addAttribute("livrosDisponiveis", livroService.findByDisponivelTrue());
+        model.addAttribute("todosUsuarios", usuarioService.buscarTodosUsuarios());
 
-        model.addAttribute("emprestimoDTO", dto);
-        model.addAttribute("usuario", usuario);
-        model.addAttribute("livrosDisponiveis", livroService.buscarLivrosDisponiveis());
-        model.addAttribute("livrosEmprestados", emprestimoService.buscarLivrosEmprestados());
+        // Lista de empréstimos EM_ANDAMENTO para a view principal
+        model.addAttribute("livrosEmprestados", emprestimoService.findByStatus(StatusEmprestimo.ATIVO));
+
         return "emprestimos";
     }
 
-    // Registrar um empréstimo
     @PostMapping("/registrar")
-    public String registrarEmprestimo(@ModelAttribute("emprestimoDTO") EmprestimoDTO dto, Model model) {
-        if (dto.getDataEmprestimo().isAfter(dto.getDataDevolucaoPrevista())) {
-            model.addAttribute("erro", "A data de empréstimo não pode ser posterior à data de devolução prevista.");
-            model.addAttribute("usuario", usuarioService.getUsuarioMock());
-            model.addAttribute("emprestimoDTO", dto);
-            model.addAttribute("livrosDisponiveis", livroService.buscarLivrosDisponiveis()); // Atualize a lista de livros disponíveis
-            model.addAttribute("livrosEmprestados", emprestimoService.buscarLivrosEmprestados());
-            return "emprestimos";
-        }
+    public String registrarEmprestimo(
+            @RequestParam UUID usuarioId,
+            @RequestParam UUID livroId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataDevolucaoPrevista) {
 
-        Livro livro = livroRepository.findById(dto.getLivroId())
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado"));
-        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-        livro.setDisponivel(false);
-        livroRepository.save(livro);
+        Usuario usuario = usuarioService.buscarUsuarioPorId(usuarioId);
+        Livro livro = livroService.obterLivroPorId(livroId);
 
         Emprestimo emprestimo = new Emprestimo();
-        emprestimo.setLivro(livro);
         emprestimo.setUsuario(usuario);
-        emprestimo.setDataEmprestimo(dto.getDataEmprestimo());
-        emprestimo.setDataDevolucaoPrevista(dto.getDataDevolucaoPrevista());
+        emprestimo.setLivro(livro);
+        emprestimo.setDataEmprestimo(LocalDate.now());
+        emprestimo.setDataDevolucaoPrevista(dataDevolucaoPrevista);
+        emprestimo.setStatus(StatusEmprestimo.ATIVO); // Corrigido para EM_ANDAMENTO
 
-        emprestimoService.registrarEmprestimo(emprestimo);
+        livro.setDisponivel(false);
+        livroService.save(livro);
+        emprestimoService.save(emprestimo);
 
+        return "redirect:/emprestimos?sucesso=Empréstimo+registrado+com+sucesso";
+    }
 
-        model.addAttribute("livrosDisponiveis", livroService.buscarLivrosDisponiveis());
-        model.addAttribute("livrosEmprestados", emprestimoService.buscarLivrosEmprestados());
+    @PostMapping("/{id}/devolver")
+    public String devolverLivro(@PathVariable UUID id) {
+        Emprestimo emprestimo = emprestimoService.findById(id);
+
+        if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
+            return "redirect:/emprestimos?erro=livroJaDevolvido";
+        }
+
+        emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
+        Livro livro = emprestimo.getLivro();
+        livro.setDisponivel(true);
+
+        livroService.save(livro);
+        emprestimoService.save(emprestimo);
 
         return "redirect:/emprestimos";
     }
 
-
-    @GetMapping("/livros-emprestados")
-    public String exibirLivrosEmprestados(Model model) {
-        model.addAttribute("livrosEmprestados", emprestimoService.buscarLivrosEmprestados());
-        return "emprestimos";
+    @GetMapping("/livrosEmprestados")
+    public String listarLivrosEmprestados(Model model) {
+        // Corrigido para usar EM_ANDAMENTO
+        List<Emprestimo> emprestimos = emprestimoService.findByStatus(StatusEmprestimo.ATIVO);
+        model.addAttribute("livrosEmprestados", emprestimos); // Nome do atributo corrigido
+        return "livrosEmprestados";
     }
 
-    @GetMapping("/livros-disponiveis")
-    public String exibirLivrosDisponiveis(Model model) {
-        model.addAttribute("livrosDisponiveis", livroService.buscarLivrosDisponiveis());
-        return "emprestimos";
+    @GetMapping("/livrosDisponiveis")
+    public String listarLivrosDisponiveis(Model model) {
+        List<Livro> livrosDisponiveis = livroService.findByDisponivelTrue();
+        model.addAttribute("livros", livrosDisponiveis);
+        return "livrosDisponiveis";
+    }
+
+    @GetMapping("/usuario/{usuarioId}/livros")
+    @ResponseBody
+    public List<EmprestimoRespostaDTO> buscarEmprestimosAtivosPorUsuario(@PathVariable UUID usuarioId) {
+        List<Emprestimo> emprestimos = emprestimoService.findByUsuarioIdAndStatus(usuarioId, StatusEmprestimo.ATIVO);
+
+        return emprestimos.stream()
+                .map(emp -> new EmprestimoRespostaDTO(
+                        emp.getId(),
+                        emp.getLivro().getTitulo(),
+                        emp.getStatus()))
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/baixa")
+    public String registrarBaixa(
+            @RequestParam("emprestimoId") UUID emprestimoId,
+            @RequestParam("dataDevolucaoReal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataDevolucaoReal,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            Emprestimo emprestimo = emprestimoService.findById(emprestimoId);
+
+            if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
+                redirectAttributes.addFlashAttribute("erro", "Este livro já foi devolvido");
+                return "redirect:/emprestimos";
+            }
+
+            // Atualiza os dados do empréstimo
+            emprestimo.setDataDevolucaoReal(dataDevolucaoReal);
+            emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
+
+            // Libera o livro
+            Livro livro = emprestimo.getLivro();
+            livro.setDisponivel(true);
+            livroService.save(livro);
+
+            // Salva o empréstimo atualizado
+            emprestimoService.save(emprestimo);
+
+            redirectAttributes.addFlashAttribute("sucesso", "Baixa registrada com sucesso!");
+            return "redirect:/emprestimos";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("erro", "Erro ao registrar baixa: " + e.getMessage());
+            return "redirect:/emprestimos";
+        }
     }
 }
