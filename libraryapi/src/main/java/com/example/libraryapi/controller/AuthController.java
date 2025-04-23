@@ -18,10 +18,10 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
-    // Exibe a página de login
+
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login"; // Retorna o template login.html
+        return "login";
     }
 
     @PostMapping("/login")

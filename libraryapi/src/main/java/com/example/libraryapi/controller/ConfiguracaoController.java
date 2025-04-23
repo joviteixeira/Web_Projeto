@@ -23,7 +23,7 @@ public class ConfiguracaoController {
         return "configuracoes";
     }
 
-    // Exibe o formulário de edição
+
     @GetMapping("/editar/{id}")
     public String editarFormulario(@PathVariable("id") UUID id, Model model) {
         Usuario usuario = usuarioService.buscarUsuarioPorId(id);
@@ -34,7 +34,7 @@ public class ConfiguracaoController {
         return "editarUsuario";
     }
 
-    // Trata a submissão do formulário de edição
+
     @PostMapping("/editar/{id}")
     public String editarUsuario(@PathVariable("id") UUID id,
                                 @RequestParam(required = false) String nome,
@@ -44,12 +44,12 @@ public class ConfiguracaoController {
             usuarioService.editarUsuario(id, nome, email, senha);
             return "redirect:/configuracoes";
         } catch (Exception e) {
-            e.printStackTrace(); // Mostra o erro no console para ajudar no debug
+            e.printStackTrace();
             return "redirect:/configuracoes?erro=true";
         }
     }
 
-    // Deletar usuário
+
     @PostMapping("/deletar/{id}")
     public String deletarUsuario(@PathVariable UUID id) {
         try {

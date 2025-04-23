@@ -14,11 +14,11 @@ public class LivroDTO {
     private LocalDate dataPublicacao;
     private GeneroEnum genero;
     private UUID autorId;
-    private String autorNome; // Add this field
+    private String autorNome;
     private UUID editoraId;
 
 
-    // Constructor from Livro entity
+
     public LivroDTO(Livro livro) {
         this.id = livro.getId();
         this.isbn = livro.getIsbn();
@@ -26,8 +26,7 @@ public class LivroDTO {
         this.dataPublicacao = livro.getDataPublicacao();
         this.genero = livro.getGenero();
         this.autorId = livro.getAutor().getId();
-        this.autorNome = livro.getAutor().getNome(); // Populate autorNome
-        this.editoraId = livro.getEditora().getId();
+        this.autorNome = livro.getAutor().getNome();
     }
 
     public LivroDTO(){

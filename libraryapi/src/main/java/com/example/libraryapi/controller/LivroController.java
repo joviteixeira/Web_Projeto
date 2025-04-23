@@ -33,7 +33,6 @@ public class LivroController {
         List<LivroDTO> livros = livroService.pesquisarLivros(titulo, autor, isbn, genero);
         model.addAttribute("livros", livros);
 
-        // Add missing attributes
         model.addAttribute("livroDTO", new LivroDTO());
         model.addAttribute("livroUpdateDTO", new LivroDTO());
         model.addAttribute("autores", livroService.listarAutores());

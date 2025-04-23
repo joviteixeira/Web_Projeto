@@ -17,7 +17,7 @@ import java.util.UUID;
 @Data
 @Builder
 @ToString(exclude = "autor")
-@NoArgsConstructor(access = AccessLevel.PUBLIC) // Construtor público vazio
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EntityListeners(AuditingEntityListener.class)
 public class Livro {

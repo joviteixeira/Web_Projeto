@@ -32,7 +32,7 @@ public class LayoutController {
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         } else {
             usuario = Usuario.builder()
-                    .id(UUID.randomUUID()) // ou null
+                    .id(UUID.randomUUID())
                     .nome("Convidado")
                     .email("convidado@fake.com")
                     .dataCadastro(LocalDate.now())
@@ -50,6 +50,6 @@ public class LayoutController {
         model.addAttribute("totalEditoras", totalEditoras);
         model.addAttribute("emprestimosAtivos", emprestimosAtivos);
 
-        return "layout"; // nome do template HTML (layout.html)
+        return "layout";
     }
 }

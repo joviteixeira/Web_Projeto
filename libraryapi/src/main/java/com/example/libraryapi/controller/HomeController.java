@@ -8,7 +8,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "home"; // home.html na pasta templates
+        return "home";
     }
 
 }

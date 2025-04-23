@@ -10,7 +10,7 @@ public class EditoraDTO {
         private UUID id;
         private String nome;
         private String pais;
-        private List<LivroDTO> livros; // Caso você tenha essa relação com livros
+        private List<LivroDTO> livros;
 
         public EditoraDTO(){}
 
@@ -19,16 +19,15 @@ public class EditoraDTO {
                 this.id = editora.getId();
                 this.nome = editora.getNome();
                 this.pais = editora.getPais();
-                // Se você estiver mapeando livros, pode adicionar aqui
-                // this.livros = editora.getLivros().stream().map(livro -> new LivroDTO(livro)).collect(Collectors.toList());
+
         }
 
-        // Método estático para converter lista de Editoras para lista de EditoraDTO
+
         public static List<EditoraDTO> toDTOList(List<Editora> editoras) {
                 return editoras.stream().map(EditoraDTO::new).collect(Collectors.toList());
         }
 
-        // Getters e Setters
+
         public UUID getId() {
                 return id;
         }

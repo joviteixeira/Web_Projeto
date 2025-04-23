@@ -34,19 +34,18 @@ public class Editora {
     private String pais;
 
     @CreatedDate
-    @Column(name = "data_cadastro") // Ou data_fundacao se for o nome correto
+    @Column(name = "data_cadastro")
     private LocalDateTime dataCadastro;
 
     @LastModifiedDate
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
-    // Mantenha o relacionamento com Livro se necessário
     @OneToMany(mappedBy = "editora")
     private List<Livro> livros;
 
 
-    // Construtor para o DTO
+
     public Editora(String nome, String pais) {
         this.nome = nome;
         this.pais = pais;

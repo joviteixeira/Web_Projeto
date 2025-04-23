@@ -27,22 +27,21 @@ public class EmprestimoService {
         this.emprestimoRepository = emprestimoRepository;
     }
 
-    // Salvar um novo empréstimo
     public void save(Emprestimo emprestimo) {
         emprestimoRepository.save(emprestimo);
     }
 
-    // Buscar todos os empréstimos
+
     public List<Emprestimo> findAll() {
         return emprestimoRepository.findAll();
     }
 
-    // Buscar empréstimo por ID
+
     public Emprestimo findById(UUID id) {
         return emprestimoRepository.findById(id).orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
     }
 
-    // Buscar empréstimos com status EM_ANDAMENTO
+
     public List<Emprestimo> findByStatus(StatusEmprestimo status) {
         return emprestimoRepository.findByStatus(status);
     }

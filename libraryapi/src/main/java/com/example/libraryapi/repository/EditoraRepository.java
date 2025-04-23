@@ -17,6 +17,5 @@ public interface EditoraRepository extends JpaRepository<Editora, UUID> {
             @Param("pais") String pais
     );
 
-    // Query alternativa usando métodos de query do Spring Data
     List<Editora> findByNomeContainingAndPaisContaining(String nome, String pais);
 }

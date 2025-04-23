@@ -63,7 +63,7 @@ public class EmprestimoController {
         emprestimo.setLivro(livro);
         emprestimo.setDataEmprestimo(LocalDate.now());
         emprestimo.setDataDevolucaoPrevista(dataDevolucaoPrevista);
-        emprestimo.setStatus(StatusEmprestimo.ATIVO); // Corrigido para EM_ANDAMENTO
+        emprestimo.setStatus(StatusEmprestimo.ATIVO);
 
         livro.setDisponivel(false);
         livroService.save(livro);
@@ -132,16 +132,13 @@ public class EmprestimoController {
                 return "redirect:/emprestimos";
             }
 
-            // Atualiza os dados do empréstimo
             emprestimo.setDataDevolucaoReal(dataDevolucaoReal);
             emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
 
-            // Libera o livro
             Livro livro = emprestimo.getLivro();
             livro.setDisponivel(true);
             livroService.save(livro);
 
-            // Salva o empréstimo atualizado
             emprestimoService.save(emprestimo);
 
             redirectAttributes.addFlashAttribute("sucesso", "Baixa registrada com sucesso!");

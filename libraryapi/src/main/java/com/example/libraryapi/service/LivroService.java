@@ -77,12 +77,12 @@ public class LivroService {
         return livroRepository.findById(id).orElseThrow(() -> new RuntimeException("Livro não encontrado"));
     }
 
-    // Salvar livro
+
     public void save(Livro livro) {
         livroRepository.save(livro);
     }
 
-    // Buscar livros disponíveis
+
     public List<Livro> findByDisponivelTrue() {
         List<Livro> livros = livroRepository.findByDisponivelTrue();
         System.out.println("Livros disponíveis: " + livros.size()); // Debug

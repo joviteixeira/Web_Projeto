@@ -20,11 +20,11 @@ public class GlobalErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
-            // Obter detalhes do erro
+
             Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
             Object message = request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
 
-            // Valores padrão
+
             int statusCode = 500;
             String errorMessage = "Erro desconhecido";
 
@@ -34,7 +34,7 @@ public class GlobalErrorController implements ErrorController {
                 }
             } catch (NumberFormatException ignored) {}
 
-            // Mapear mensagens amigáveis
+
             Map<Integer, String> errorMessages = Map.of(
                     400, "Requisição inválida",
                     401, "Não autorizado",
@@ -43,7 +43,7 @@ public class GlobalErrorController implements ErrorController {
                     500, "Erro interno do servidor"
             );
 
-            // Configurar modelo
+
             model.addAttribute("titulo", "Erro " + statusCode + " | Biblioteca Digital");
             model.addAttribute("codigo", statusCode);
             model.addAttribute("mensagemPrincipal", errorMessages.getOrDefault(statusCode, errorMessage));

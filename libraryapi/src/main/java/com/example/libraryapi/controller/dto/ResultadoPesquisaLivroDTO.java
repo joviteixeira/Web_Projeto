@@ -16,9 +16,9 @@ public class ResultadoPesquisaLivroDTO {
     private String titulo;
     private String isbn;
     private LocalDate dataPublicacao;
-    private String autorNome; // apenas o nome (simplificado)
+    private String autorNome;
 
-    // Construtor alternativo simplificado (opção 2)
+
     public ResultadoPesquisaLivroDTO(UUID id, String titulo, String isbn, LocalDate dataPublicacao, String nomeAutor) {
         this.id = id;
         this.titulo = titulo;

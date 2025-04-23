@@ -27,11 +27,11 @@ public class CadastroController {
     }
 
     @PostMapping("/cadastro")
-    public String cadastrarUsuario(@ModelAttribute("usuario") UsuarioDTO usuario, Model model) { // Nome explícito
+    public String cadastrarUsuario(@ModelAttribute("usuario") UsuarioDTO usuario, Model model) {
         try {
             if (usuarioService.existeEmail(usuario.getEmail())) {
                 model.addAttribute("erro", "Este e-mail já está cadastrado");
-                model.addAttribute("usuario", usuario); // Reenvia o objeto para o template
+                model.addAttribute("usuario", usuario);
                 return "cadastro";
             }
 
@@ -41,7 +41,7 @@ public class CadastroController {
 
         } catch (Exception e) {
             model.addAttribute("erro", "Ocorreu um erro durante o cadastro");
-            model.addAttribute("usuario", usuario); // Mantém os dados digitados
+            model.addAttribute("usuario", usuario);
             return "cadastro";
         }
     }
