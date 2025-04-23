@@ -340,6 +340,7 @@
     <p>Modo de acesso:</p>
     <strong th:text="${usuario?.nome ?: 'Convidado'}">Convidado</strong>
     <div class="config-links">
+      <a href="/configuracoes">Editar Perfil</a>
       <a href="/login" th:if="${usuario == null}">Entrar</a>
     </div>
   </div>

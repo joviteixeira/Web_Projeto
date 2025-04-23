@@ -42,6 +42,7 @@
         position: sticky;
         top: 0;
         height: 100vh;
+        justify-content: space-between;
     }
 
     .sidebar-header {
@@ -264,9 +265,11 @@
     </ul>
   </div>
   <div class="sidebar-footer">
-    <p>Sistema de Gestão</p>
+    <p>Modo de acesso:</p>
+    <strong th:text="${usuario?.nome ?: 'Convidado'}">Convidado</strong>
     <div class="config-links">
-      <a href="/login">Acessar Conta</a>
+      <a href="/configuracoes">Editar Perfil</a>
+      <a href="/login" th:if="${usuario == null}">Sair</a>
     </div>
   </div>
 </aside>
